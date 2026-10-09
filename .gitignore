@@ -10,3 +10,8 @@ qa/*
 node_modules/
 __pycache__/
 dist/
+public-api/
+.env*
+.vercel/
+!qa/cloud.test.cjs
+!qa/cloud-browser.test.cjs

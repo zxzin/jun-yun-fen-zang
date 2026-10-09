@@ -21,15 +21,16 @@ jobs:
       - name: Build portable HTML
         run: python3 build.py
       - name: Verify allocation invariants
-        run: node --test qa/engine.test.cjs
+        run: npm ci --ignore-scripts && npm test
       - name: Verify committed artifact
-        run: git diff --exit-code -- index.html
+        run: git diff --exit-code -- index.html local.html
       - uses: actions/configure-pages@v5
       - name: Prepare public files
         run: |
           mkdir -p dist/assets
           cp index.html dist/index.html
-          cp assets/yy-flat-v4.png dist/assets/yy-flat-v4.png
+          cp local.html dist/local.html
+          cp assets/yy-round-v5.png dist/assets/yy-round-v5.png
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

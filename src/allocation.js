@@ -49,6 +49,10 @@ const Allocation=(()=>{
     for(let k=0;k<left;k++)result[peers[k].i]++;
     return result;
   }
+  function transfer(total,row,from,to,amount){
+    if(!validRow(total,row)||![from,to].every(i=>Number.isInteger(i)&&i>=0&&i<row.length)||!Number.isInteger(amount)||amount<0)throw Error('无效的金币移动');
+    const next=row.slice();if(from===to)return next;const moved=Math.min(amount,row[from]);next[from]-=moved;next[to]+=moved;return next;
+  }
   function settle(total,ballots){
     const n=ballots?.length;
     if(!Number.isInteger(total)||total<1||total>100000000||!Array.isArray(ballots)||n<2||n>12)throw Error('需要完整提交');
@@ -63,5 +67,6 @@ const Allocation=(()=>{
     const amounts=exact||project(mean,Array(n).fill(0),Array(n).fill(total),total);
     return {amounts,mean,feasible,lower,upper,shortage:Math.max(0,sum(lower)-total),surplus:Math.max(0,total-sum(upper)),within:amounts.map((x,i)=>x>=lower[i]&&x<=upper[i])};
   }
-  return Object.freeze({parseQuantity,bounds,validRow,equal,redistribute,project,settle});
+  return Object.freeze({parseQuantity,bounds,validRow,equal,redistribute,transfer,project,settle});
 })();
+if(typeof module!=='undefined'&&module.exports)module.exports=Allocation;

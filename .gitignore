@@ -1,0 +1,12 @@
+.DS_Store
+archive/
+promo/
+.zinxlaunch/
+PROJECT_SPEC.md
+PROJECT_STATE.md
+qa/*
+!qa/engine.test.cjs
+!qa/general-browser.test.cjs
+node_modules/
+__pycache__/
+dist/

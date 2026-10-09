@@ -31,26 +31,37 @@ const Allocation=(()=>{
     if(sum(result)!==total||result.some((x,i)=>!Number.isInteger(x)||x<lower[i]||x>upper[i]))throw Error('分配总量校验失败');
     return result;
   }
-  function opinion(total,own,expected,guesses){
-    const n=guesses?.length;
-    if(!Number.isInteger(total)||total<1||total>100000000||!Number.isInteger(n)||n<2||n>12||!Number.isInteger(own)||own<0||own>=n||!Number.isInteger(expected)||expected<0||expected>total||guesses.some(x=>!Number.isInteger(x)||x<0||x>total))throw Error('无效的填报');
-    const claims=guesses.map((x,i)=>i===own?expected:x),count=sum(claims);
-    const proportional=claims.map(x=>count?total*x/count:total/n);
-    return project(proportional,Array(n).fill(0),Array(n).fill(total),total);
+  function validRow(total,row){
+    return Number.isInteger(total)&&total>0&&total<=100000000&&Array.isArray(row)&&row.length>=2&&row.length<=12&&row.every(x=>Number.isInteger(x)&&x>=0&&x<=total)&&sum(row)===total;
+  }
+  function equal(total,count){
+    if(!Number.isInteger(total)||total<1||total>100000000||!Number.isInteger(count)||count<2||count>12)throw Error('无效的总量或人数');
+    return Array.from({length:count},(_,i)=>Math.floor(total/count)+(i<total%count?1:0));
+  }
+  function redistribute(total,row,index,next){
+    if(!validRow(total,row)||!Number.isInteger(index)||index<0||index>=row.length||!Number.isInteger(next)||next<0||next>total)throw Error('无效的分配');
+    const remaining=total-next,oldRemaining=total-row[index];
+    const peers=row.map((x,i)=>({i,exact:oldRemaining?remaining*x/oldRemaining:remaining/(row.length-1)})).filter(x=>x.i!==index);
+    const result=row.map(()=>0);result[index]=next;
+    peers.forEach(p=>result[p.i]=Math.floor(p.exact));
+    peers.sort((a,b)=>(b.exact-Math.floor(b.exact))-(a.exact-Math.floor(a.exact))||a.i-b.i);
+    let left=total-sum(result);
+    for(let k=0;k<left;k++)result[peers[k].i]++;
+    return result;
   }
   function settle(total,ballots){
     const n=ballots?.length;
     if(!Number.isInteger(total)||total<1||total>100000000||!Array.isArray(ballots)||n<2||n>12)throw Error('需要完整提交');
     for(const b of ballots){
-      if(!Number.isInteger(b.expected)||b.expected<0||b.expected>total||!Number.isInteger(b.tolerance)||b.tolerance<0||b.tolerance>100||!Array.isArray(b.guesses)||b.guesses.length!==n)throw Error('提交数据校验失败');
+      if(!b||!Number.isInteger(b.tolerance)||b.tolerance<0||b.tolerance>100||!validRow(total,b.shares)||b.shares.length!==n)throw Error('提交数据校验失败');
     }
-    const rows=ballots.map((b,i)=>opinion(total,i,b.expected,b.guesses));
+    const rows=ballots.map(b=>b.shares);
     const mean=Array.from({length:n},(_,i)=>sum(rows.map(row=>row[i]))/n);
-    const limits=ballots.map(b=>bounds(b.expected,b.tolerance,total));
+    const limits=ballots.map((b,i)=>bounds(b.shares[i],b.tolerance,total));
     const lower=limits.map(x=>x[0]),upper=limits.map(x=>x[1]);
     const exact=project(mean,lower,upper,total),feasible=exact!==null;
     const amounts=exact||project(mean,Array(n).fill(0),Array(n).fill(total),total);
     return {amounts,mean,feasible,lower,upper,shortage:Math.max(0,sum(lower)-total),surplus:Math.max(0,total-sum(upper)),within:amounts.map((x,i)=>x>=lower[i]&&x<=upper[i])};
   }
-  return Object.freeze({parseQuantity,bounds,opinion,project,settle});
+  return Object.freeze({parseQuantity,bounds,validRow,equal,redistribute,project,settle});
 })();

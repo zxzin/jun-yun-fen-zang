@@ -43,4 +43,3 @@ test('400 random problems match independent exhaustive integer optimization',()=
   search(0,total,0);assert.ok(Math.abs(best-r.amounts.reduce((s,x,i)=>s+(x-r.mean[i])**2,0))<1e-6);assert.equal(sum(r.amounts),total);
  }
 });
-test('coins transfer between exactly two seats and preserve total',()=>{assert.deepEqual(arr(A.transfer(100,[40,30,30],0,2,5)),[35,30,35]);assert.deepEqual(arr(A.transfer(100,[1,49,50],0,1,5)),[0,50,50]);assert.deepEqual(arr(A.transfer(100,[40,30,30],1,1,5)),[40,30,30]);assert.throws(()=>A.transfer(100,[40,30,30],-1,2,5));assert.throws(()=>A.transfer(100,[40,30,30],1,2,-5));});

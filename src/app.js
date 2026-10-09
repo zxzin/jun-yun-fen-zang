@@ -3,7 +3,7 @@
   const $=s=>document.querySelector(s),app=$('#app');
   const ART='__MASCOT_DATA__',BLIND_ART='__BLIND_MASCOT_DATA__',STORE='junyun-v4-local';
   const API='https://junyun-rooms.vercel.app/api/rooms',CLOUD_STORE='junyun-cloud-v1';
-  let cloud=null,poll=null,mode='cloud',topic='',names=[],coinSource=null;
+  let cloud=null,poll=null,mode='cloud',topic='',names=[],interactionCleanup=()=>{};
   const ownIndex=()=>cloud?.seat??ballots.length;
   const isCloud=()=>!!cloud;
   const presets={money:{label:'金钱',unit:'元',precision:2,totalText:'1000',symbol:'¥'},percent:{label:'百分比',unit:'%',precision:2,totalText:'100',symbol:'%'},custom:{label:'资源',unit:'份',precision:0,totalText:'100',symbol:'✳'}};
@@ -22,7 +22,7 @@
   const announce=s=>$('#announcement').textContent=s;
   function toast(s){$('.toast')?.remove();const t=document.createElement('div');t.className='toast';t.role='status';t.textContent=s;document.body.append(t);setTimeout(()=>t.remove(),3000)}
   function mount(html,keep=false){
-    viewEpoch++;$('.flying-coin')?.remove();const y=scrollY;app.innerHTML='<div class="screen">'+html+'</div>';document.body.dataset.phase=phase;
+    interactionCleanup();interactionCleanup=()=>{};viewEpoch++;const y=scrollY;app.innerHTML='<div class="screen">'+html+'</div>';document.body.dataset.phase=phase;
     $('#reset-btn').hidden=phase==='home';window.scrollTo(0,keep?y:0);
     const h=$('h1');if(h&&!keep){h.tabIndex=-1;h.focus({preventScroll:true})}
   }
@@ -67,62 +67,75 @@
   function slots(){return '<div class="slots" aria-label="封存进度">'+seats.map((_,i)=>'<div class="slot '+(i<ballots.length?'done':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+icon(i<ballots.length?'lock':'box',24)+'<small>'+(i<ballots.length?'已封存':'待填写')+'</small></div>').join('')+'</div>'}
   function handoff(){
     draft=null;phase=ballots.length===seats.length?'ready':'handoff';const ready=phase==='ready';
-    mount('<section class="handoff-card"><span class="eyebrow">'+ballots.length+' / '+seats.length+' 已封存</span><h1>'+(ready?'全部封存':ballots.length?'已封存':'准备开始')+'</h1><p>'+(ready?'':'请其他人暂时回避。')+'</p><div class="handoff-art">'+mascot('mascot',true)+'</div>'+slots()+'<div class="next-turn"><div><small>'+(ready?esc(config.label):'请把手机交给')+'</small><h2>'+(ready?esc(quantity(total)):esc(seats[ballots.length]))+'</h2></div><button type="button" id="next" class="primary">'+(ready?'一起开盒':'是我，开始')+icon('arrow')+'</button></div><p class="micro">'+(storageOK?'本机已保存 · 刷新后可继续':'本局暂未保存，请保持页面打开')+'</p></section>');
+    mount('<section class="handoff-card"><span class="eyebrow">'+ballots.length+' / '+seats.length+' 已封存</span><h1>'+(ready?'全部封存':ballots.length?'已封存':'准备开始')+'</h1><p>'+(ready?'':'请其他人暂时回避。')+'</p><div class="handoff-art">'+mascot('mascot',true)+'</div>'+slots()+'<div class="next-turn"><div><small>'+(ready?esc(config.label):'请把手机交给')+'</small><h2>'+(ready?esc(quantity(total)):esc(seats[ballots.length]))+'</h2></div><button type="button" id="next" class="primary">'+(ready?'揭晓分配':'是我，开始分')+icon('arrow')+'</button></div><p class="micro">'+(storageOK?'本机已保存 · 刷新后可继续':'本局暂未保存，请保持页面打开')+'</p></section>');
     $('#next').onclick=()=>ready?reveal():beginTurn();announce(ready?'全员已封存，可以开盒':'轮到'+seats[ballots.length]);
   }
   function beginTurn(){stopPoll();draft={name:cloud?seats[ownIndex()]:'',shares:Allocation.equal(total,seats.length),tolerance:20,step:'allocate',invalid:new Set()};allocationView()}
-  function toolbar(step){return '<div class="private-toolbar"><span class="turn-chip"><b>'+String(ownIndex()+1).padStart(2,'0')+'</b> '+esc(seats[ownIndex()])+' · 私密回合</span><button type="button" id="cover" class="text-button">'+icon('eye',17)+' 遮一下</button></div><div class="step-track"><span class="'+(step===1?'active':'complete')+'">1 分配</span><i></i><span class="'+(step===2?'active':'')+'">2 封存</span></div>'}
-  const coinUnit=()=>Math.max(1,Math.ceil(total/20));
+  function toolbar(editName=false){return '<div class="private-toolbar"><span class="turn-chip">'+(editName&&!cloud?'<input id="player-name" aria-label="你的名字" placeholder="'+esc(seats[ownIndex()])+'" maxlength="16" value="'+esc(draft.name)+'" autocomplete="off">':esc(seats[ownIndex()]))+'<b>'+String(ownIndex()+1)+' / '+seats.length+'</b></span><button type="button" id="cover" class="text-button">'+icon('eye',20)+' 遮住</button></div>'}
+  const pushStep=()=>Math.max(1,Math.round(total/100));
   function stackMarkup(layers,position=0){
     return `<span class="coin-stack" style="--stack:${position};--layers:${layers}">${Array.from({length:layers},(_,j)=>`<i class="gold-coin" style="--layer:${j}"></i>`).join('')}</span>`;
   }
-  function coinPile(x){
-    if(!x)return '';
-    // Sixty visual layers show the relative share; the amount remains the exact value.
-    const count=Math.max(1,Math.ceil(x/total*60));
-    const heights=[0,0,0],order=[1,0,2,1,0,2,1,0];
+  function coinHeights(x){
+    const count=x?Math.max(1,Math.ceil(x/total*60)):0,heights=[0,0,0],order=[1,0,2,1,0,2,1,0];
     for(let i=0;i<count;i++)heights[order[i%order.length]]++;
-    return heights.map((n,i)=>n?stackMarkup(n,i):'').join('');
+    return heights;
+  }
+  function coinPile(x){return coinHeights(x).map((n,i)=>n?stackMarkup(n,i):'').join('')}
+  function syncCoinPile(pile,x){
+    const animate=pile.dataset.ready==='true';
+    coinHeights(x).forEach((n,i)=>{
+      let stack=pile.querySelector('[data-stack="'+i+'"]');
+      if(!stack){stack=document.createElement('span');stack.className='coin-stack';stack.dataset.stack=i;stack.style.setProperty('--stack',i);pile.append(stack)}
+      stack.style.setProperty('--layers',n);stack.hidden=n===0;
+      while(stack.children.length>n)stack.lastElementChild.remove();
+      while(stack.children.length<n){const coin=document.createElement('i');coin.className='gold-coin'+(animate?' new-coin':'');coin.style.setProperty('--layer',stack.children.length);stack.append(coin)}
+    });
+    pile.dataset.ready='true';
   }
   function allocationView(){
-    phase='private';draft.step='allocate';coinSource=null;const own=ownIndex();
-    mount(`<section class="game-card coin-game">${toolbar(1)}<div class="heading-with-mascot"><h1>${esc(topic||'你的分配')}</h1></div>${cloud?'':`<div class="name-row"><input id="player-name" maxlength="16" placeholder="你的名字（选填）" aria-label="你的名字" value="${esc(draft.name)}" autocomplete="off"></div>`}<form id="ballot" novalidate><div class="table-scene"><div class="table-total"><span>共 <b>${esc(quantity(total))}</b></span><button type="button" id="equalize">均分 ↺</button></div>${mascot('table-host',true)}<div class="coin-table" data-count="${seats.length}">${seats.map((name,i)=>`<section class="coin-seat ${i===own?'own':''}" data-seat="${i}" style="--tint:${fills[i]};--ink:${colors[i]}"><div class="coin-person"><span class="seat-avatar">${i+1}</span><b>${esc(name)}</b>${i===own?'<em>我</em>':''}</div><button type="button" class="coin-plate" data-plate="${i}" aria-label="${esc(name)}的金币，选中后点另一人的盘子转移"><span class="coin-pile" aria-hidden="true">${coinPile(draft.shares[i])}</span><span class="empty-plate">${draft.shares[i]?'':'＋'}</span></button><div class="row-amount"><input id="amount-${i}" data-amount="${i}" inputmode="${config.precision?'decimal':'numeric'}" maxlength="12" value="${raw(draft.shares[i])}" aria-label="${esc(name)}分配数量" aria-describedby="ballot-error"><span>${esc(config.unit)}</span></div><output id="percent-${i}">${pct(draft.shares[i])}%</output></section>`).join('')}</div></div><div class="coin-guide"><span>每次 ${esc(quantity(coinUnit()))}</span><span id="coin-hint">拖一叠给 TA</span></div><p class="error" id="ballot-error" role="alert"></p><button class="primary wide" id="step-next" type="submit">分好了 ${icon('arrow')}</button></form></section>`);
-    $('#cover').onclick=cover;$('#player-name')?.addEventListener('input',e=>draft.name=e.target.value);
+    phase='private';draft.step='allocate';const own=ownIndex();
+    mount(`<section class="game-card coin-game">${toolbar(true)}<div class="play-heading"><h1>上下推金币</h1><button type="button" id="equalize" class="equalize">均分 ↺</button></div><form id="ballot" novalidate><div class="table-scene"><div class="table-total"><span>${esc(topic||config.label)}</span><b>${esc(quantity(total))}</b></div><div class="coin-table" data-count="${seats.length}" data-dense="${seats.length>4}">${seats.map((name,i)=>`<section class="coin-seat ${i===own?'own':''}" data-seat="${i}" style="--tint:${fills[i]};--ink:${colors[i]}"><div class="coin-person"><span class="seat-avatar">${i+1}</span><b>${esc(name)}</b>${i===own?'<em>我</em>':''}</div><div class="row-amount"><input id="amount-${i}" data-amount="${i}" inputmode="${config.precision?'decimal':'numeric'}" maxlength="12" value="${raw(draft.shares[i])}" aria-label="${esc(name)}分配数量，单位${esc(config.unit)}" aria-describedby="ballot-error"></div><div class="push-stage" data-push="${i}" role="slider" tabindex="0" aria-label="${esc(name)}的金币，向上增加，向下减少" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="${raw(total)}" aria-valuenow="${raw(draft.shares[i])}"><span class="push-track" aria-hidden="true"></span><span class="push-fill" aria-hidden="true"></span><span class="push-floor" aria-hidden="true"></span><span class="coin-pile" aria-hidden="true"></span><span class="push-thumb" aria-hidden="true">↕</span></div><div class="lane-controls"><button type="button" data-nudge="${i}" data-direction="-1" aria-label="减少${esc(name)}的份额">−</button><output id="percent-${i}">${pct(draft.shares[i])}%</output><button type="button" data-nudge="${i}" data-direction="1" aria-label="增加${esc(name)}的份额">＋</button></div></section>`).join('')}</div></div><p class="error" id="ballot-error" role="alert"></p><div class="action-dock"><button class="primary wide" id="step-next" type="submit">分好了，去封存 ${icon('arrow',24)}</button></div></form></section>`);
+    $('#cover').onclick=cover;$('#player-name')?.addEventListener('input',e=>{draft.name=e.target.value;$('[data-seat="'+own+'"] .coin-person b').textContent=draft.name.trim()||seats[own]});
     document.querySelectorAll('[data-amount]').forEach(input=>input.oninput=()=>{
       const i=+input.dataset.amount,x=Allocation.parseQuantity(input.value,config.precision);
       if(x===null||x>total){draft.invalid.add(i);input.setAttribute('aria-invalid','true');$('#ballot-error').textContent='每份填 0–'+quantity(total)+(config.precision?'，最多两位小数。':'，使用整数。');return}
-      draft.invalid.delete(i);draft.shares=Allocation.redistribute(total,draft.shares,i,x);syncShares(i);
+      draft.invalid.delete(i);draft.shares=Allocation.redistribute(total,draft.shares,i,x);syncShares(i);markPlayed();
     });
-    $('#equalize').onclick=()=>{draft.shares=Allocation.equal(total,seats.length);draft.invalid.clear();coinSource=null;syncShares();announce('已均分')};
-    $('#ballot').onsubmit=e=>{e.preventDefault();if(draft.invalid.size){$('#ballot-error').textContent='先修改标出的数量。';$('#amount-'+[...draft.invalid][0]).focus();return}sealView()};bindCoins();syncShares();
+    $('#equalize').onclick=()=>{draft.shares=Allocation.equal(total,seats.length);draft.invalid.clear();syncShares();announce('已均分')};
+    $('#ballot').onsubmit=e=>{e.preventDefault();if(draft.invalid.size){$('#ballot-error').textContent='先修改标出的数量。';$('#amount-'+[...draft.invalid][0]).focus();return}sealView()};bindPushers();syncShares();
   }
+  function markPlayed(){document.querySelector('.coin-game')?.classList.add('has-played')}
   function syncShares(editing=-1){
-    draft.shares.forEach((x,i)=>{const input=$('#amount-'+i),plate=$('[data-plate="'+i+'"]');if(i!==editing&&!draft.invalid.has(i))input.value=raw(x);input.setAttribute('aria-invalid',String(draft.invalid.has(i)));$('#percent-'+i).textContent=pct(x)+'%';plate.querySelector('.coin-pile').innerHTML=coinPile(x);plate.querySelector('.empty-plate').textContent=x?'':'＋';plate.setAttribute('aria-pressed',String(coinSource===i));plate.setAttribute('aria-label',seats[i]+'，'+quantity(x)+'。选中后点另一人的盘子转移。')});
-    if(!draft.invalid.size)$('#ballot-error').textContent='';
-    $('#coin-hint').textContent=coinSource===null?'拖一叠给 TA':'点一下，给 TA';
-  }
-  function moveCoin(from,to){
-    if(draft.invalid.size){toast('先修改标出的数量');return}
-    if(from===to||!draft.shares[from])return;
-    const moved=Math.min(coinUnit(),draft.shares[from]);draft.shares=Allocation.transfer(total,draft.shares,from,to,moved);coinSource=null;syncShares();
-    for(const [i,sign] of [[from,'−'],[to,'+']]){const seat=$('[data-seat="'+i+'"]');seat.classList.remove('coin-received','coin-given');void seat.offsetWidth;seat.classList.add(i===to?'coin-received':'coin-given');seat.querySelector('.coin-delta')?.remove();const delta=document.createElement('span');delta.className='coin-delta';delta.setAttribute('aria-hidden','true');delta.textContent=sign+quantity(moved);seat.append(delta);setTimeout(()=>delta.remove(),800)}announce(seats[from]+'转给'+seats[to]+' '+quantity(moved));
-  }
-  function bindCoins(){
-    let drag=null,suppress=false;
-    const target=(x,y)=>{const p=document.elementFromPoint(x,y)?.closest('[data-plate]');return p?+p.dataset.plate:null};
-    const clear=()=>{document.querySelectorAll('.drop-coin,.coin-lifted').forEach(p=>p.classList.remove('drop-coin','coin-lifted'));$('.flying-coin')?.remove();drag=null};
-    document.querySelectorAll('[data-plate]').forEach(plate=>{
-      const from=+plate.dataset.plate;
-      plate.onpointerdown=e=>{if(e.button!==0||!draft.shares[from])return;drag={id:e.pointerId,from,x:e.clientX,y:e.clientY,moved:false};suppress=false;plate.setPointerCapture(e.pointerId)};
-      plate.onpointermove=e=>{if(!drag||drag.id!==e.pointerId)return;const d=drag;if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>7)d.moved=true;if(!d.moved)return;let ghost=$('.flying-coin');if(!ghost){ghost=document.createElement('span');ghost.className='flying-coin';ghost.innerHTML=stackMarkup(5)+'<b>'+esc(quantity(Math.min(coinUnit(),draft.shares[from])))+'</b>';ghost.setAttribute('aria-hidden','true');document.body.append(ghost);plate.classList.add('coin-lifted')}ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';document.querySelectorAll('.drop-coin').forEach(p=>p.classList.remove('drop-coin'));const to=target(e.clientX,e.clientY);if(to!==null&&to!==from)$('[data-plate="'+to+'"]').classList.add('drop-coin')};
-      plate.onpointerup=e=>{if(!drag||drag.id!==e.pointerId)return;const d=drag,to=target(e.clientX,e.clientY);suppress=d.moved;clear();if(d.moved&&to!==null)moveCoin(from,to)};
-      plate.onpointercancel=plate.onlostpointercapture=()=>{if(drag){suppress=drag.moved;clear()}};
-      plate.onclick=()=>{if(suppress){suppress=false;return}if(coinSource===null){if(!draft.shares[from]){toast('这个盘子还没有金币');return}coinSource=from;syncShares()}else if(coinSource===from){coinSource=null;syncShares()}else moveCoin(coinSource,from)};
+    draft.shares.forEach((x,i)=>{
+      const input=$('#amount-'+i),stage=$('[data-push="'+i+'"]'),pile=stage.querySelector('.coin-pile');
+      if(i!==editing&&!draft.invalid.has(i))input.value=raw(x);
+      input.setAttribute('aria-invalid',String(draft.invalid.has(i)));input.style.setProperty('--digits',Math.max(4,raw(x).length));
+      $('#percent-'+i).textContent=pct(x)+'%';stage.style.setProperty('--share',x/total);
+      syncCoinPile(pile,x);
+      stage.setAttribute('aria-valuenow',raw(x));stage.setAttribute('aria-valuetext',quantity(x));stage.dataset.empty=String(x===0);
     });
+    if(!draft.invalid.size)$('#ballot-error').textContent='';
+  }
+  function bindPushers(){
+    let drag=null,frame=0;
+    const render=()=>{cancelAnimationFrame(frame);frame=0;if(draft&&phase==='private')syncShares()};
+    const finish=(cancel=false)=>{if(!drag)return;const d=drag;drag=null;if(cancel&&draft)draft.shares=d.base;render();d.stage.closest('.coin-seat').classList.remove('pushing');if(d.stage.hasPointerCapture(d.id))d.stage.releasePointerCapture(d.id);if(!cancel)announce(seats[d.i]+' '+quantity(draft.shares[d.i]))};
+    const update=(i,next)=>{if(draft.invalid.size){toast('先修改标出的数量');return}draft.shares=Allocation.redistribute(total,draft.shares,i,Math.max(0,Math.min(total,next)));syncShares();markPlayed()};
+    document.querySelectorAll('[data-push]').forEach(stage=>{
+      const i=+stage.dataset.push;
+      stage.onpointerdown=e=>{if(e.button!==0||e.isPrimary===false||drag)return;if(draft.invalid.size){toast('先修改标出的数量');return}const travel=Math.max(80,stage.clientHeight-52);drag={id:e.pointerId,i,stage,y:e.clientY,start:draft.shares[i],base:draft.shares.slice(),travel};stage.setPointerCapture(e.pointerId);stage.closest('.coin-seat').classList.add('pushing');markPlayed();e.preventDefault()};
+      stage.onpointermove=e=>{if(!drag||e.pointerId!==drag.id||phase!=='private')return;const next=Math.max(0,Math.min(total,Math.round(drag.start+(drag.y-e.clientY)/drag.travel*total)));draft.shares=Allocation.redistribute(total,drag.base,i,next);if(!frame)frame=requestAnimationFrame(render)};
+      stage.onpointerup=e=>{if(drag?.id===e.pointerId)finish()};
+      stage.onpointercancel=stage.onlostpointercapture=()=>finish(true);
+      stage.onkeydown=e=>{const direction={ArrowUp:1,ArrowRight:1,ArrowDown:-1,ArrowLeft:-1,PageUp:10,PageDown:-10}[e.key];if(direction||e.key==='Home'||e.key==='End'){e.preventDefault();update(i,e.key==='Home'?0:e.key==='End'?total:draft.shares[i]+direction*pushStep());announce(seats[i]+' '+quantity(draft.shares[i]))}};
+    });
+    document.querySelectorAll('[data-nudge]').forEach(b=>b.onclick=()=>update(+b.dataset.nudge,draft.shares[+b.dataset.nudge]+Number(b.dataset.direction)*pushStep()));
+    interactionCleanup=()=>{cancelAnimationFrame(frame);drag=null;frame=0};
   }
   function sealView(){
     phase='private';draft.step='seal';const own=ownIndex();
-    mount('<section class="game-card seal-card">'+toolbar(2)+'<div class="seal-heading"><button type="button" id="back" class="back" aria-label="返回修改分配">←</button><div><h1>封存</h1><p></p></div></div><div class="range-control"><div class="range-head"><span>我的接受范围</span><strong id="range-description"></strong></div><div class="segment" role="group" aria-label="可接受浮动"><div class="glass-lens" aria-hidden="true"></div>'+[0,10,20,30].map(t=>'<button type="button" data-tolerance="'+t+'" aria-pressed="'+(t===draft.tolerance)+'">'+(t?'±'+t+'%':'就这些')+'</button>').join('')+'</div><p class="micro">我的 '+esc(quantity(draft.shares[own]))+'</p></div><div class="seal-stage" id="seal-stage" data-state="idle"><div class="seal-stage-caption" id="seal-status" role="status">↓</div><button type="button" id="proposal-card" class="proposal-card" aria-label="秘密分配卡。拖入下方盒子，或按回车封存。"><span class="card-tab"></span><span class="ticket-head">'+icon('eye',17)+' '+(own+1)+' 号的秘密</span><span class="ticket-bars">'+draft.shares.map((x,i)=>'<span class="ticket-pile" style="--tint:'+fills[i]+'">'+coinPile(x)+'</span>').join('')+'</span><span class="ticket-bottom"> <b>↕</b></span></button><div class="drop-halo" id="drop-zone" aria-label="盲盒投入口"><div class="toy-box"><div class="box-slot"></div><div class="box-lid"><i></i></div><div class="box-body"><span class="box-equals">=</span><span class="box-label"></span></div><span class="box-lock">'+icon('lock',27)+'</span><span class="sealed-stamp">已封存 ✓</span></div></div>'+mascot('box-keeper',true)+'<span class="box-speech" id="box-speech" aria-hidden="true">↓</span></div><div class="seal-bottom"><button type="button" class="secondary" id="tap-seal">'+icon('box',17)+' 封存</button><span class="micro"></span></div><div id="sealed-next" hidden><button type="button" class="primary wide" id="handoff-next">'+(cloud?'查看进度':own+1===seats.length?'查看结果':'下一位')+icon('arrow')+'</button></div></section>');
+    mount('<section class="game-card seal-card">'+toolbar()+'<div class="seal-heading"><button type="button" id="back" class="back" aria-label="返回修改分配">←</button><div><h1>封存方案</h1><p></p></div></div><div class="range-control"><div class="range-head"><span>我能接受</span><strong id="range-description"></strong></div><div class="segment" role="group" aria-label="可接受浮动"><div class="glass-lens" aria-hidden="true"></div>'+[0,10,20,30].map(t=>'<button type="button" data-tolerance="'+t+'" aria-pressed="'+(t===draft.tolerance)+'">'+(t?'±'+t+'%':'就这些')+'</button>').join('')+'</div><p class="range-ideal">我想拿 <b>'+esc(quantity(draft.shares[own]))+'</b></p></div><div class="seal-stage" id="seal-stage" data-state="idle"><div class="seal-stage-caption" id="seal-status" role="status">拖卡片，或按下方按钮</div><button type="button" id="proposal-card" class="proposal-card" aria-label="秘密分配卡。拖入下方盒子，或按回车封存。"><span class="card-tab"></span><span class="ticket-head">'+icon('eye',17)+' '+(own+1)+' 号的秘密</span><span class="ticket-bars" data-dense="'+(seats.length>4)+'">'+draft.shares.map((x,i)=>'<span class="ticket-pile" style="--tint:'+fills[i]+'">'+coinPile(x)+'</span>').join('')+'</span><span class="ticket-bottom"><b>↓ 放进盒子</b></span></button><div class="drop-halo" id="drop-zone" aria-label="盲盒投入口"><div class="toy-box"><div class="box-slot"></div><div class="box-lid"><i></i></div><div class="box-body"><span class="box-equals">=</span><span class="box-label"></span></div><span class="box-lock">'+icon('lock',27)+'</span><span class="sealed-stamp">已封存 ✓</span></div></div>'+mascot('box-keeper',true)+'<span class="box-speech" id="box-speech" aria-hidden="true">↓</span></div><div class="seal-bottom action-dock"><button type="button" class="primary wide" id="tap-seal">'+icon('lock',24)+' 封存我的方案</button></div><div id="sealed-next" hidden><button type="button" class="primary wide" id="handoff-next">'+(cloud?'查看进度':own+1===seats.length?'查看结果':'下一位')+icon('arrow')+'</button></div></section>');
     $('#cover').onclick=cover;$('#back').onclick=allocationView;
     document.querySelectorAll('[data-tolerance]').forEach(b=>b.onclick=()=>{draft.tolerance=+b.dataset.tolerance;syncRange()});syncRange();
     $('#tap-seal').onclick=()=>startSealing();$('#handoff-next').onclick=()=>cloud?loadCloud():handoff();bindDrag();
@@ -134,7 +147,7 @@
   function bindDrag(){
     const card=$('#proposal-card'),stage=$('#seal-stage'),zone=$('#drop-zone');let drag=null,moved=false;
     const inside=(x,y)=>{const r=zone.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom};
-    const reset=()=>{drag=null;card.style.transform='';stage.dataset.state='idle';$('#seal-status').textContent='↓';$('#box-speech').textContent='↓'};
+    const reset=()=>{drag=null;card.style.transform='';stage.dataset.state='idle';$('#seal-status').textContent='拖卡片，或按下方按钮';$('#box-speech').textContent='↓'};
     card.addEventListener('pointerdown',e=>{if(sealing||e.button!==0)return;const r=card.getBoundingClientRect();drag={id:e.pointerId,x:e.clientX,y:e.clientY,cx:r.left+r.width/2,cy:r.top+r.height/2};moved=false;card.setPointerCapture(e.pointerId);stage.dataset.state='dragging';$('#seal-status').textContent='拖入盒口';e.preventDefault()});
     card.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;moved=moved||Math.hypot(dx,dy)>5;const hit=inside(drag.cx+dx,drag.cy+dy);card.style.transform='translate('+dx+'px,'+dy+'px) rotate('+Math.max(-9,Math.min(9,dx/10))+'deg) scale(1.04)';stage.dataset.state=hit?'over':'dragging';$('#box-speech').textContent=hit?'✓':'↓';$('#seal-status').textContent=hit?'松手封存':'拖入盒口'});
     card.addEventListener('pointerup',e=>{if(!drag||e.pointerId!==drag.id)return;const hit=inside(drag.cx+e.clientX-drag.x,drag.cy+e.clientY-drag.y);drag=null;if(hit&&moved)startSealing();else reset()});
@@ -160,7 +173,7 @@
   }
   function finishSealing(){
     clearTimeout(timer);timer=null;if(!sealing)return;sealing=false;phase='sealed';document.body.dataset.phase=phase;$('#reset-btn').disabled=false;
-    const stage=$('#seal-stage');if(!stage){if(cloud)loadCloud();else handoff();return}stage.dataset.state='sealed';$('#proposal-card')?.remove();$('.range-control')?.remove();$('#back')?.remove();$('#cover')?.remove();$('.seal-heading h1').textContent='已封存';$('.seal-heading p').textContent=cloud?'等待大家完成。':storageOK?'请交给下一位。':'浏览器未允许保存，请保持页面打开。';$('.seal-bottom').hidden=true;$('#sealed-next').hidden=false;$('#handoff-next').disabled=false;$('#handoff-next').focus({preventScroll:true});$('#seal-status').textContent='封存成功 ✓';announce(storageOK?'方案已封存并保存':'方案已封存，暂未保存到本机');
+    const stage=$('#seal-stage');if(!stage){if(cloud)loadCloud();else handoff();return}stage.dataset.state='sealed';$('#proposal-card')?.remove();$('.range-control')?.remove();$('#back')?.remove();$('.private-toolbar')?.remove();$('.seal-heading h1').textContent=cloud?'已封存':ballots.length===seats.length?'大家，一起揭晓':('交给'+seats[ballots.length]);$('.seal-heading p').textContent=storageOK?'':'浏览器未允许保存，请保持页面打开。';$('.seal-bottom').hidden=true;$('#sealed-next').hidden=false;$('#handoff-next').disabled=false;$('#handoff-next').focus({preventScroll:true});$('#seal-status').textContent='已封存 ✓';announce(storageOK?'方案已封存并保存':'方案已封存，暂未保存到本机');
   }
   function cover(){
     if(phase!=='private')return;phase='covered';mount('<section class="covered-card">'+mascot('mascot',true)+'<h1>嘘，暂时盖住。</h1><p>'+esc(seats[ownIndex()])+'，回来再继续。</p><button type="button" class="primary" id="uncover">继续我的回合 '+icon('arrow')+'</button></section>');$('#uncover').onclick=()=>draft.step==='seal'?sealView():allocationView();
@@ -170,8 +183,8 @@
   }
   function renderResult(keep=false){
     phase='result';const count=accepted.filter(Boolean).length;
-    mount('<section class="results"><div class="result-heading"><div><h1>'+(result.feasible?'分配结果':'需要再商量')+'</h1><p>'+(result.feasible?'均在可接受范围内。':'接受范围有冲突，下面是综合参考。')+'</p></div>'+mascot('result-mascot')+'</div><div class="result-total"><span>'+esc(config.label)+'总量</span><strong>'+esc(quantity(total))+'</strong></div>'+(!result.feasible?'<div class="conflict" role="status"><b>'+(result.shortage?'大家的最低期望合计多了 '+esc(quantity(result.shortage)):'大家的最高期望合计还少 '+esc(quantity(result.surplus)))+'</b><p>先商量可接受范围，再决定是否采用。</p></div>':'')+'<div class="result-list">'+ballots.map((b,i)=>'<article class="result-player" style="--tint:'+fills[i]+';--ink:'+colors[i]+'"><div class="result-person"><span class="seat-avatar">'+(i+1)+'</span><div><h2>'+esc(b.name)+'</h2></div><span class="result-percent">'+pct(result.amounts[i])+'%</span></div><div class="result-amount"><strong>'+value(result.amounts[i])+'</strong><span>'+esc(config.unit)+'</span></div><div class="result-meter"><i style="width:'+result.amounts[i]/total*100+'%"></i></div>'+(result.within[i]===false?'<p class="outside">超出原定范围，需本人确认</p>':'')+'<button type="button" class="accept" data-accept="'+i+'" '+(cloud&&cloud.seat!==i?'disabled':'')+' aria-pressed="'+accepted[i]+'">'+icon(accepted[i]?'check':'eye',16)+(accepted[i]?'已认可':'认可')+'</button></article>').join('')+'</div><div class="consensus">'+icon(count===seats.length?'check':'box')+' '+count+' / '+seats.length+' 已认可'+(count===seats.length?' · 达成共识':'')+'</div><div class="result-tools"><button type="button" class="primary" id="save">'+icon('download')+' 保存结果</button><button type="button" class="secondary" id="algorithm">怎么算的？</button></div><p class="micro center">每位参与者确认自己的结果</p></section>',keep);
-    document.querySelectorAll('[data-accept]').forEach(b=>b.onclick=async()=>{const i=+b.dataset.accept;if(cloud){try{applyCloud(await cloudRequest({action:'accept',room:cloud.id,accepted:!accepted[i]},cloud.credential),true)}catch(e){toast(e.message)}}else{accepted[i]=!accepted[i];persist();renderResult(true);document.querySelectorAll('[data-accept]')[i].focus({preventScroll:true})}});$('#save').onclick=saveResult;$('#algorithm').onclick=()=>$('#rules').showModal();
+    mount('<section class="results"><div class="result-heading"><div><h1>'+(count===seats.length?'都同意了':result.feasible?'分配结果':'还差一点共识')+'</h1><p>'+(count===seats.length?'按这个方案分。':result.feasible?'每个人都在自己填写的范围内':'下面是参考方案，需要大家确认')+'</p></div>'+mascot('result-mascot')+'</div><div class="result-total"><span>'+esc(config.label)+'总量</span><strong>'+esc(quantity(total))+'</strong></div>'+(!result.feasible?'<div class="conflict" role="status"><b>'+(result.shortage?'大家的最低期望合计多了 '+esc(quantity(result.shortage)):'大家的最高期望合计还少 '+esc(quantity(result.surplus)))+'</b><p>先商量可接受范围，再决定是否采用。</p><button type="button" class="primary" id="renegotiate">再分一轮 '+icon('arrow')+'</button></div>':'')+'<div class="result-list">'+ballots.map((b,i)=>'<article class="result-player" style="--tint:'+fills[i]+';--ink:'+colors[i]+'"><div class="result-person"><span class="seat-avatar">'+(i+1)+'</span><div><h2>'+esc(b.name)+'</h2></div><span class="result-percent">'+pct(result.amounts[i])+'%</span></div><div class="result-amount"><strong>'+value(result.amounts[i])+'</strong><span>'+esc(config.unit)+'</span></div><div class="result-meter"><i style="width:'+result.amounts[i]/total*100+'%"></i></div>'+(result.within[i]===false?'<p class="outside">超出原定范围，需本人确认</p>':'')+'<button type="button" class="accept" data-accept="'+i+'" '+(cloud&&cloud.seat!==i?'disabled':'')+' aria-pressed="'+accepted[i]+'">'+icon('check',16)+(accepted[i]?'我同意了':'这个数，可以')+'</button></article>').join('')+'</div><div class="consensus">'+icon(count===seats.length?'check':'box')+' '+count+' / '+seats.length+' 已认可'+(count===seats.length?' · 达成共识':'')+'</div><div class="result-tools"><button type="button" class="primary" id="save">'+icon('download')+' 保存结果</button><button type="button" class="secondary" id="algorithm">怎么算的？</button></div><p class="micro center">每位参与者确认自己的结果</p></section>',keep);
+    document.querySelectorAll('[data-accept]').forEach(b=>b.onclick=async()=>{const i=+b.dataset.accept;if(cloud){try{applyCloud(await cloudRequest({action:'accept',room:cloud.id,accepted:!accepted[i]},cloud.credential),true)}catch(e){toast(e.message)}}else{accepted[i]=!accepted[i];persist();renderResult(true);document.querySelectorAll('[data-accept]')[i].focus({preventScroll:true})}});$('#save').onclick=saveResult;$('#algorithm').onclick=()=>$('#rules').showModal();$('#renegotiate')?.addEventListener('click',()=>{if(cloud){names=seats.slice();mode='cloud';home();return}pendingReset=()=>{seats=ballots.map((b,i)=>b.name||seats[i]);ballots=[];accepted=seats.map(()=>false);result=null;draft=null;persist();handoff()};$('#restart-copy').textContent='保留主题、总量和名字，重新填写所有人的方案。本机上一轮方案会被替换。';$('#restart').showModal()});
   }
   function saveResult(){
     const text=['均匀分赃',config.label+'：'+quantity(total),'状态：'+(result.feasible?'各自范围内的综合建议':'接受范围冲突，需协商'),'现场认可：'+accepted.filter(Boolean).length+'/'+seats.length,'',...ballots.map((b,i)=>seats[i]+' · '+b.name+'：'+quantity(result.amounts[i])+'（'+(accepted[i]?'已认可':'待认可')+'）'),'','每人一份完整分配，等权平均，再按接受范围调整。'].join('\n');

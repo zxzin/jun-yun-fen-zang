@@ -30,7 +30,7 @@ jobs:
           mkdir -p dist/assets
           cp index.html dist/index.html
           cp local.html dist/local.html
-          cp assets/yy-round-v5.png dist/assets/yy-round-v5.png
+          cp assets/yy-round-v6.png dist/assets/yy-round-v6.png
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

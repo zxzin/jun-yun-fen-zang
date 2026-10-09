@@ -10,7 +10,8 @@ def data(name):
     return "data:image/webp;base64," + base64.b64encode((ROOT / name).read_bytes()).decode("ascii")
 
 app = read("src/app.js")
-app = app.replace("__MASCOT_DATA__", data("assets/yy-round-v5.webp"))
+app = app.replace("__MASCOT_DATA__", data("assets/yy-round-v6.webp"))
+app = app.replace("__BLIND_MASCOT_DATA__", data("assets/yy-blind-v6.webp"))
 html = read("src/shell.html")
 for key, value in {
     "STYLE": read("src/style.css") + "\n" + read("src/interactions.css") + "\n" + read("src/coins.css"),

@@ -1,13 +1,38 @@
 <svg class="coin-library" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
  <defs>
-  <linearGradient id="mouse-coin-edge" x1="0" x2="1"><stop stop-color="#d4971c"/><stop offset=".35" stop-color="#ffda63"/><stop offset="1" stop-color="#ba7911"/></linearGradient>
+  <linearGradient id="mouse-coin-edge" x1="0" x2="1">
+   <stop stop-color="#ae7219"/><stop offset=".16" stop-color="#e8b748"/><stop offset=".37" stop-color="#ffe59c"/><stop offset=".57" stop-color="#dba133"/><stop offset=".82" stop-color="#c18720"/><stop offset="1" stop-color="#a46b18"/>
+  </linearGradient>
+  <linearGradient id="mouse-coin-rim" x1=".14" y1="0" x2=".79" y2="1">
+   <stop stop-color="#fff9d8"/><stop offset=".3" stop-color="#ffe598"/><stop offset=".49" stop-color="#dda437"/><stop offset=".63" stop-color="#fff1b9"/><stop offset="1" stop-color="#e2a637"/>
+  </linearGradient>
+  <linearGradient id="mouse-coin-gold" x1=".12" y1="0" x2=".86" y2="1">
+   <stop stop-color="#fff0b3"/><stop offset=".32" stop-color="#f4c65c"/><stop offset=".53" stop-color="#ffe393"/><stop offset=".74" stop-color="#f7d074"/><stop offset="1" stop-color="#dfaa40"/>
+  </linearGradient>
+  <linearGradient id="mouse-coin-recess" x1="0" y1="0" x2=".6" y2="1">
+   <stop stop-color="#c78c28"/><stop offset=".27" stop-color="#efbd50"/><stop offset="1" stop-color="#ffdc83"/>
+  </linearGradient>
+  <path id="mouse-coin-outline" d="M12.1 15.8C5.8 15.5 2.6 12.6 3.2 8.7C3.8 4.7 8.5 2 14 2C19.2 2 23.6 4.1 24.7 7.3C29.5 6.3 34.5 6.3 39.3 7.3C40.4 4.1 44.8 2 50 2C55.5 2 60.2 4.7 60.8 8.7C61.4 12.6 58.2 15.5 51.9 15.8C57.2 18.1 60.3 21.6 60 25.2C59.3 33.2 47.2 39 32 39C16.8 39 4.7 33.2 4 25.2C3.7 21.6 6.8 18.1 12.1 15.8Z"/>
+  <clipPath id="mouse-coin-field"><use href="#mouse-coin-outline" transform="translate(2 1.1) scale(.9375 .94)"/></clipPath>
   <symbol id="coin-layer" viewBox="0 0 64 44">
    <path d="M4 22v7c0 7.5 12.5 13 28 13s28-5.5 28-13v-7Z" fill="url(#mouse-coin-edge)" stroke="#bc841d" stroke-width=".7"/>
    <ellipse cx="32" cy="22" rx="28" ry="12" fill="#ffda65" stroke="#e9b53b" stroke-width=".7"/>
    <path d="M5 27c3 6.6 14 11.8 27 11.8S56 33.6 59 27" fill="none" stroke="#ffe797" stroke-width="1"/>
   </symbol>
   <symbol id="coin-model" viewBox="0 0 64 44">
-   <image href="__MOUSE_COIN_DATA__" x="0" y="0" width="64" height="44" preserveAspectRatio="none"/>
+   <use href="#mouse-coin-outline" transform="translate(0 2.6)" fill="url(#mouse-coin-edge)" stroke="#b17b22" stroke-width=".65"/>
+   <path d="M6.4 28.2C9.5 35.3 20.1 40 32 40S54.5 35.3 57.6 28.2" fill="none" stroke="#f5d582" stroke-width=".65"/>
+   <use href="#mouse-coin-outline" fill="url(#mouse-coin-rim)" stroke="#d29b35" stroke-width=".65"/>
+   <use href="#mouse-coin-outline" transform="translate(2 1.1) scale(.9375 .94)" fill="url(#mouse-coin-gold)" stroke="#bd8629" stroke-width=".65"/>
+   <g clip-path="url(#mouse-coin-field)" fill="none" stroke="#fff2bf" stroke-width=".24" opacity=".34">
+    <path d="M-3 20L65 1M-3 24L65 5M-3 28L65 9M-3 32L65 13M-3 36L65 17M-3 40L65 21M-3 44L65 25M-3 48L65 29"/>
+   </g>
+   <ellipse cx="14" cy="9.1" rx="6.7" ry="4.25" fill="url(#mouse-coin-recess)" stroke="#eec86e" stroke-width=".45"/>
+   <ellipse cx="50" cy="9.1" rx="6.7" ry="4.25" fill="url(#mouse-coin-recess)" stroke="#eec86e" stroke-width=".45"/>
+   <path d="M8 8.4C9.2 6.3 11.5 5.5 14 5.5M44 8.4C45.2 6.3 47.5 5.5 50 5.5" fill="none" stroke="#fff0b3" stroke-width=".65" stroke-linecap="round"/>
+   <ellipse cx="32" cy="23.5" rx="23.6" ry="11.25" fill="none" stroke="#c79331" stroke-width=".55"/>
+   <path d="M8.8 25C11 30.5 20.5 35.25 32 35.25S53 30.5 55.2 25" fill="none" stroke="#fff0b7" stroke-width=".7" stroke-linecap="round"/>
+   <path d="M4.6 9C5.4 5.7 9.7 3.25 14 3.25C18 3.25 21.5 4.6 23.5 7.8M25.5 8.2C29.7 7.5 34.3 7.5 38.5 8.2M40.5 7.8C42.5 4.6 46 3.25 50 3.25C54.3 3.25 58.6 5.7 59.4 9" fill="none" stroke="#fff9dc" stroke-width=".8" stroke-linecap="round"/>
   </symbol>
  </defs>
 </svg>

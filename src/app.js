@@ -105,7 +105,7 @@
       if(!stack){stack=document.createElement('span');stack.className='coin-stack';stack.dataset.stack=i;stack.style.setProperty('--stack',i);pile.append(stack)}
       stack.style.setProperty('--layers',n);stack.hidden=n===0;
       while(stack.children.length>n)stack.lastElementChild.remove();
-      while(stack.children.length<n){const coin=document.createElement('i');coin.className='gold-coin'+(animate?' new-coin':'');coin.style.setProperty('--layer',stack.children.length);coin.innerHTML='<svg viewBox="0 0 64 30" aria-hidden="true" focusable="false"><use href="#coin-model"/></svg>';stack.append(coin)}
+      while(stack.children.length<n){const coin=document.createElement('i');coin.className='gold-coin'+(animate?' new-coin':'');coin.style.setProperty('--layer',stack.children.length);coin.innerHTML='<svg viewBox="0 0 64 44" aria-hidden="true" focusable="false"><use class="coin-side" href="#coin-layer"/><use class="coin-portrait" href="#coin-model"/></svg>';stack.append(coin)}
     });
     pile.dataset.ready='true';
   }

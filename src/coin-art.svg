@@ -1,0 +1,21 @@
+<svg class="coin-library" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+ <defs>
+  <linearGradient id="coin-edge" x1="0" x2="1" y1="0" y2="0">
+   <stop stop-color="#d6a027"/><stop offset=".27" stop-color="#ffdb70"/><stop offset=".62" stop-color="#efbd48"/><stop offset="1" stop-color="#bc811a"/>
+  </linearGradient>
+  <linearGradient id="coin-face" x1=".2" y1="0" x2=".75" y2="1">
+   <stop stop-color="#ffeaa0"/><stop offset="1" stop-color="#ffd466"/>
+  </linearGradient>
+  <symbol id="coin-model" viewBox="0 0 64 30">
+   <path d="M2 11.5v5.5C2 23.1 15.4 28 32 28s30-4.9 30-11v-5.5Z" fill="url(#coin-edge)" stroke="#c28b24" stroke-width=".75"/>
+   <path d="M4 18c4.9 4.8 16.5 7.5 28 7.5S55.1 22.8 60 18" fill="none" stroke="#ffe9a0" stroke-opacity=".62" stroke-width=".8"/>
+   <path d="M10 17v4M16 19v4M23 20.5v4M32 21v4M41 20.5v4M48 19v4M54 17v4" fill="none" stroke="#aa771b" stroke-opacity=".22" stroke-width=".8"/>
+   <ellipse cx="32" cy="11.5" rx="30" ry="10.5" fill="url(#coin-face)" stroke="#d3a039" stroke-width=".8"/>
+   <path d="M3.7 10C6.7 4.9 18.1 1.8 32 1.8c11.8 0 22.3 2.6 27.1 6.2" fill="none" stroke="#fff5cf" stroke-width="1.2" stroke-linecap="round"/>
+   <ellipse cx="32" cy="11.5" rx="25.7" ry="7.7" fill="none" stroke="#dba93d" stroke-width=".75"/>
+   <path d="M8 12.2c1.6 3.5 11.8 6.4 24 6.4s22.4-2.9 24-6.4" fill="none" stroke="#fff0b2" stroke-width=".8"/>
+   <path d="M25.4 9.7h13.2m-13.2 4.3h13.2" fill="none" stroke="#ffefb1" stroke-width="2" stroke-linecap="round"/>
+   <path d="M25.4 9h13.2m-13.2 4.3h13.2" fill="none" stroke="#b0832b" stroke-width="1.7" stroke-linecap="round"/>
+  </symbol>
+ </defs>
+</svg>

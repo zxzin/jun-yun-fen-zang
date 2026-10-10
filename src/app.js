@@ -93,15 +93,11 @@
   function beginTurn(){stopPoll();draft={name:cloud?seats[ownIndex()]:'',shares:Allocation.equal(total,seats.length),tolerance:20,step:'allocate',invalid:new Set()};allocationView()}
   function toolbar(editName=false){return '<div class="private-toolbar"><span class="turn-chip">'+(editName&&!cloud?'<input id="player-name" aria-label="你的名字" placeholder="'+esc(seats[ownIndex()])+'" maxlength="16" value="'+esc(draft.name)+'" autocomplete="off">':esc(seats[ownIndex()]))+'<b>'+String(ownIndex()+1)+' / '+seats.length+'</b></span><button type="button" id="cover" class="text-button">'+icon('eye',20)+' 遮住</button></div>'}
   const pushStep=()=>Math.max(1,Math.round(total/100));
-  function stackMarkup(layers,position=0){
-    return `<span class="coin-stack" style="--stack:${position};--layers:${layers}">${Array.from({length:layers},(_,j)=>`<i class="gold-coin" style="--layer:${j}"></i>`).join('')}</span>`;
-  }
   function coinHeights(x){
     const count=x?Math.max(1,Math.ceil(x/total*60)):0,heights=[0,0,0],order=[1,0,2,1,0,2,1,0];
     for(let i=0;i<count;i++)heights[order[i%order.length]]++;
     return heights;
   }
-  function coinPile(x){return coinHeights(x).map((n,i)=>n?stackMarkup(n,i):'').join('')}
   function syncCoinPile(pile,x){
     const animate=pile.dataset.ready==='true';
     coinHeights(x).forEach((n,i)=>{
@@ -109,7 +105,7 @@
       if(!stack){stack=document.createElement('span');stack.className='coin-stack';stack.dataset.stack=i;stack.style.setProperty('--stack',i);pile.append(stack)}
       stack.style.setProperty('--layers',n);stack.hidden=n===0;
       while(stack.children.length>n)stack.lastElementChild.remove();
-      while(stack.children.length<n){const coin=document.createElement('i');coin.className='gold-coin'+(animate?' new-coin':'');coin.style.setProperty('--layer',stack.children.length);stack.append(coin)}
+      while(stack.children.length<n){const coin=document.createElement('i');coin.className='gold-coin'+(animate?' new-coin':'');coin.style.setProperty('--layer',stack.children.length);coin.innerHTML='<svg viewBox="0 0 64 30" aria-hidden="true" focusable="false"><use href="#coin-model"/></svg>';stack.append(coin)}
     });
     pile.dataset.ready='true';
   }

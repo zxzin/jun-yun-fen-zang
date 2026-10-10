@@ -1,28 +1,7 @@
 /* Every animation marks a user action or a state transition. */
 @keyframes screen-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes receive{0%{transform:scale(1)}40%{transform:scale(1.08,.93)}70%{transform:scale(.97,1.03)}100%{transform:scale(1)}}
-@keyframes swallow{0%{transform:var(--from-transform,rotate(-4deg));opacity:1}45%{transform:translateY(var(--sink-y)) rotate(5deg) scale(.8);opacity:1}100%{transform:translateY(calc(var(--sink-y) + 34px)) rotate(0) scale(.3,.08);opacity:0}}
-@keyframes lock-pop{0%{transform:scale(0) rotate(-25deg);opacity:0}70%{transform:scale(1.18) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes stamp{0%{transform:scale(2) rotate(12deg);opacity:0}70%{transform:scale(.93) rotate(12deg);opacity:1}100%{transform:scale(1) rotate(12deg);opacity:1}}
 @keyframes open-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px) rotate(-1deg)}40%{transform:translateX(5px) rotate(1deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
-.seal-stage[data-state=dragging] .proposal-card,.seal-stage[data-state=over] .proposal-card{transition:none;cursor:grabbing;box-shadow:0 12px 22px #34447524}
-.seal-stage[data-state=dragging] .drop-halo{background:#e2e9ff;outline:2px dashed #a2b5f3;outline-offset:4px}
-.seal-stage[data-state=over] .drop-halo{background:#def3ae;outline:3px dashed #7ba533;outline-offset:4px;transform:scale(1.03)}
-.seal-stage[data-state=over] .box-lid{transform:translateY(-25px) rotate(-13deg)}
-.seal-stage[data-state=over] .box-keeper{transform:translateY(-8px) rotate(-6deg)}
-.seal-stage[data-state=swallow] .proposal-card{animation:swallow .65s cubic-bezier(.3,.1,.65,.9) both;pointer-events:none}
-.seal-stage[data-state=swallow] .toy-box{animation:receive .55s .35s both}
-.seal-stage[data-state=closed] .proposal-card{opacity:0}
-.seal-stage[data-state=closed] .box-lid,.seal-stage[data-state=sealed] .box-lid{transform:translateY(13px) rotate(0)}
-.seal-stage[data-state=closed] .box-lock{animation:lock-pop .36s .2s both}
-.seal-stage[data-state=closed] .sealed-stamp{animation:stamp .3s .5s both}
-.seal-stage[data-state=sealed] .box-lock{opacity:1;transform:scale(1)}
-.seal-stage[data-state=sealed] .sealed-stamp{opacity:1;transform:scale(1) rotate(12deg)}
-.seal-stage[data-state=sealed] .toy-box{animation:receive .35s both}
-.seal-stage[data-state=sealed]{background:#eff7dc;height:280px}
-.seal-stage[data-state=sealed] .drop-halo{top:105px}
-.seal-stage[data-state=sealed] .box-keeper{bottom:35px}
-.seal-stage[data-state=sealed] .box-speech{bottom:148px}
 .opening .mascot{animation:open-shake .8s ease-in-out}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}.screen{animation:none}.hero-art .mascot,.handoff-art .mascot{transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}.screen{animation:none}.hero-art .mascot{transform:none}}
 @media(prefers-reduced-transparency:reduce){.glass-lens{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}}

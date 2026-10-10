@@ -1,6 +1,6 @@
 {
   "name": "junyun-rooms",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "private": true,
   "engines": {
     "node": ">=22"

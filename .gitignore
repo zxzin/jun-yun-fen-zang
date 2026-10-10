@@ -21,3 +21,5 @@ public-api/
 
 !qa/blob.test.cjs
 !qa/live-storage-probe.cjs
+
+!qa/locks-browser.test.cjs

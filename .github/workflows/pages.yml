@@ -23,7 +23,7 @@ jobs:
       - name: Verify allocation invariants
         run: npm ci --ignore-scripts && npm test
       - name: Verify committed artifact
-        run: git diff --exit-code -- index.html local.html play-5.5.2.html
+        run: git diff --exit-code -- index.html local.html play-5.5.2.html play-5.6.0.html
       - uses: actions/configure-pages@v5
       - name: Prepare public files
         run: |
@@ -31,6 +31,7 @@ jobs:
           cp index.html dist/index.html
           cp local.html dist/local.html
           cp play-5.5.2.html dist/play-5.5.2.html
+          cp play-5.6.0.html dist/play-5.6.0.html
           cp assets/yy-round-v6.png dist/assets/yy-round-v6.png
           touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3

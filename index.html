@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src https://junyun-rooms.vercel.app; form-action 'none'; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f6fa">
-<meta name="application-version" content="5.5.2">
+<meta name="application-version" content="5.6.0">
 <meta property="og:title" content="FairShare · 好好分赃">
 <meta property="og:description" content="分享邀请或本地分，每人提交自己的分配方案，全员封存后揭晓。">
 <meta property="og:image" content="https://zxzin.github.io/jun-yun-fen-zang/assets/yy-round-v6.png">
@@ -66,6 +66,11 @@ dialog{width:calc(100% - 32px);max-width:540px;padding:28px;border:0;border-radi
 .coin-table{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;position:relative}.coin-table[data-count="2"],.coin-table[data-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}.coin-seat{position:relative;min-width:0;text-align:center;isolation:isolate;border-radius:24px;background:color-mix(in srgb,var(--tint) 16%,#fff);padding:16px 12px 10px;transition:box-shadow .18s,background .18s}.coin-seat.pushing{background:color-mix(in srgb,var(--tint) 35%,#fff);box-shadow:0 0 0 3px var(--ink)}.coin-person{display:flex;align-items:center;justify-content:center;gap:6px;min-height:31px;margin-bottom:9px}.coin-person b{font-size:15px;font-weight:650;overflow-wrap:anywhere;line-height:1.2;min-width:0}.coin-person .seat-avatar{width:27px;height:27px;border-radius:50%;font-size:12px}.coin-person em{font-style:normal;font-size:11px;color:var(--ink);line-height:1;flex-shrink:0}.row-amount{display:flex;align-items:baseline;justify-content:center;gap:3px}.coin-seat .row-amount input{font-size:clamp(19px,calc(190px / var(--digits,4)),38px)!important;text-align:center;width:100%;max-width:160px;background:transparent!important;min-height:43px;padding:0!important;letter-spacing:-.8px;font-weight:750}.coin-seat .row-amount span{font-size:12px}
 .push-stage{position:relative;width:100%;height:256px;touch-action:none;cursor:ns-resize;outline:none;isolation:isolate;--travel:204px;user-select:none;-webkit-user-select:none}.push-stage:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:18px}.push-track{position:absolute;right:8px;top:16px;bottom:16px;width:5px;border-radius:5px;background:color-mix(in srgb,var(--tint) 28%,#fff)}.push-fill{position:absolute;right:8px;bottom:16px;width:5px;height:calc(10px + var(--share,.333)*var(--travel));border-radius:5px;background:var(--ink);opacity:.68;pointer-events:none}.push-floor{position:absolute;left:4%;right:7%;bottom:14px;height:31px;border-radius:50%;background:color-mix(in srgb,var(--tint) 36%,#fff);box-shadow:0 1px 0 color-mix(in srgb,var(--tint) 52%,#fff);pointer-events:none}.coin-pile{position:absolute;bottom:28px;left:calc(50% - 9px);width:130px;height:205px;transform:translateX(-50%);pointer-events:none;--coin-w:60px;--coin-h:41px;--stack-x:35px;--layer-gap:5px}.push-thumb{position:absolute;right:-9px;bottom:calc(7px + var(--share,.333)*var(--travel));width:39px;height:42px;border-radius:15px;display:grid;place-items:center;font-size:25px;font-weight:600;z-index:5;pointer-events:none}.push-stage[data-empty=true] .push-floor:after{content:'+';font-size:25px;color:var(--ink);line-height:31px}.lane-controls{display:flex;align-items:center;justify-content:space-between;gap:4px;position:relative}.lane-controls button{width:42px;min-height:44px;padding:0;border-radius:14px;font-size:24px;line-height:1}.lane-controls output{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}.action-dock{position:sticky;bottom:0;z-index:10;padding:18px 0 max(4px,env(safe-area-inset-bottom));background:linear-gradient(#fff0,#fff 13px);margin-top:4px}.action-dock .primary{min-height:62px;font-size:19px;border-radius:21px}.coin-game #step-next{margin:0}.coin-game .error{position:relative;z-index:11}
 .new-coin{animation:coin-arrive .22s cubic-bezier(.2,.75,.25,1) both}@keyframes coin-arrive{0%{transform:translateY(-9px);opacity:0}65%{transform:translateY(1px);opacity:1}100%{transform:translateY(0);opacity:1}}.conflict .primary{margin-top:14px;min-height:48px;font-size:16px}
+.coin-seat.is-locked{background:color-mix(in srgb,var(--tint) 27%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 28%,transparent)}
+.coin-seat.is-locked .row-amount input{color:var(--ink)}
+.push-stage[aria-disabled=true]{cursor:default;touch-action:pan-y}
+.lane-controls button:disabled{opacity:.35;box-shadow:none;cursor:default}
+.allocation-hint{margin:15px 0 0;text-align:center;font-size:13px;line-height:1.5;color:#425779}
 
 @keyframes push-cue{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .coin-game:not(.has-played) .coin-seat:first-child .push-thumb{animation:push-cue 1.1s ease-in-out 2}.table-total{margin-bottom:18px}.range-head{display:block}.range-head>span{display:block;font-size:17px;margin-bottom:5px}.range-head strong{display:block;text-align:left;font-size:27px}.range-ideal{font-size:15px;margin-top:12px}.result-mascot{transform:none}.result-total{background:#dfedc8}
@@ -194,9 +199,22 @@ body{min-height:100dvh;background:#f4f6fa;color:var(--play-ink)}
 .lane-controls button{color:var(--ink);background:var(--lens-fill);border:1px solid #ffffffdc;box-shadow:var(--lens-edge),0 2px 5px #2c467815;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .push-thumb{background:var(--lens-fill);border:1px solid #fff;box-shadow:var(--lens-edge),var(--lens-shadow);backdrop-filter:blur(6px) saturate(1.4);-webkit-backdrop-filter:blur(6px) saturate(1.4);color:var(--ink);transition:transform .2s var(--control-ease),background-color .18s}
 .pushing .push-thumb{background:var(--lens-fill),#ffdf77;transform:scale(1.08)}
+.share-lock{
+ display:flex;align-items:center;justify-content:center;gap:5px;width:100%;min-height:44px;margin-top:8px;padding:6px;
+ border-radius:14px;font-size:13px;font-weight:550;color:var(--ink);
+ background:var(--lens-fill);border:1px solid #ffffffdc;box-shadow:var(--lens-edge),var(--lens-shadow);
+ backdrop-filter:blur(6px) saturate(1.3);-webkit-backdrop-filter:blur(6px) saturate(1.3);
+ transition:transform .2s var(--control-ease),background-color .2s,box-shadow .2s;
+}
+.share-lock svg{flex:none}
+.share-lock[aria-pressed=true]{background:var(--lens-fill),var(--tint);box-shadow:var(--lens-edge),inset 0 -2px 0 color-mix(in srgb,var(--ink) 20%,transparent)}
+.share-lock:active{transform:translateY(2px) scale(.96)}
+.share-lock:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.equalize:disabled{opacity:.4;cursor:default}
 
 /* Feedback stays local to the key being pressed. */
 @media(hover:hover){
+ .share-lock:hover{box-shadow:var(--lens-edge),0 4px 10px #2c46782b}
  .primary:not(:disabled):hover{background-color:#264dd4;transform:translateY(-1px)}
  .primary:not(:disabled):hover>svg{transform:translateX(2px)}
  .secondary:not(:disabled):hover,.resume:hover,.counter button:not(:disabled):hover,.back:hover,.equalize:hover,.accept:hover,.lane-controls button:not(:disabled):hover{transform:translateY(-1px);box-shadow:var(--lens-edge),0 4px 10px #2c46782b}
@@ -220,15 +238,17 @@ body{min-height:100dvh;background:#f4f6fa;color:var(--play-ink)}
  .party-dots{max-width:75px}.resource-tabs button{font-size:13px}
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
- .control-lens,.glass-lens,.counter button,.push-thumb,.lane-controls button{background:#f2f7ff}
+ .control-lens,.glass-lens,.counter button,.push-thumb,.lane-controls button,.share-lock{background:#f2f7ff}
+ .share-lock[aria-pressed=true]{background:var(--tint)}
 }
 @media(prefers-reduced-transparency:reduce){
- .control-lens,.glass-lens,.counter button,.push-thumb,.lane-controls button{background:#f2f7ff;backdrop-filter:none;-webkit-backdrop-filter:none}
+ .control-lens,.glass-lens,.counter button,.push-thumb,.lane-controls button,.share-lock{background:#f2f7ff;backdrop-filter:none;-webkit-backdrop-filter:none}
+ .share-lock[aria-pressed=true]{background:var(--tint)}
  .secondary,.resume,.back,.equalize,.accept,.private-toolbar .text-button{background:#e4edff;backdrop-filter:none;-webkit-backdrop-filter:none}
  .accept[aria-pressed=true]{background:#cde9b9}
 }
 @media(prefers-reduced-motion:reduce){
- .primary:active,.secondary:active,.counter button:active,.lane-controls button:active,.mode-tabs button:active,.resource-tabs button:active{transform:none}
+ .primary:active,.secondary:active,.counter button:active,.lane-controls button:active,.mode-tabs button:active,.resource-tabs button:active,.share-lock:active{transform:none}
 }
 
 </style>
@@ -326,11 +346,28 @@ const Allocation=(()=>{
     if(!Number.isInteger(total)||total<1||total>100000000||!Number.isInteger(count)||count<2||count>12)throw Error('无效的总量或人数');
     return Array.from({length:count},(_,i)=>Math.floor(total/count)+(i<total%count?1:0));
   }
-  function redistribute(total,row,index,next){
-    if(!validRow(total,row)||!Number.isInteger(index)||index<0||index>=row.length||!Number.isInteger(next)||next<0||next>total)throw Error('无效的分配');
-    const remaining=total-next,oldRemaining=total-row[index];
-    const peers=row.map((x,i)=>({i,exact:oldRemaining?remaining*x/oldRemaining:remaining/(row.length-1)})).filter(x=>x.i!==index);
-    const result=row.map(()=>0);result[index]=next;
+  function unlockedSeats(total,row,locked){
+    if(!validRow(total,row)||!Array.isArray(locked)||locked.length!==row.length||!locked.every(x=>typeof x==='boolean'))throw Error('无效的分配或锁定状态');
+    return row.map((_,i)=>i).filter(i=>!locked[i]);
+  }
+  function adjustmentRange(total,row,index,locked=row.map(()=>false)){
+    const free=unlockedSeats(total,row,locked);
+    if(!Number.isInteger(index)||index<0||index>=row.length)throw Error('无效的玩家');
+    return locked[index]||free.length<2?[row[index],row[index]]:[0,sum(free.map(i=>row[i]))];
+  }
+  function equalUnlocked(total,row,locked){
+    const free=unlockedSeats(total,row,locked),remaining=sum(free.map(i=>row[i])),result=row.slice();
+    free.forEach((i,k)=>result[i]=Math.floor(remaining/free.length)+(k<remaining%free.length?1:0));
+    return result;
+  }
+  function redistribute(total,row,index,next,locked=row.map(()=>false)){
+    const [min,max]=adjustmentRange(total,row,index,locked);
+    if(!Number.isInteger(next)||next<min||next>max)throw Error('数量超出可分范围');
+    if(next===row[index])return row.slice();
+    const peers=row.map((x,i)=>({i,x})).filter(p=>p.i!==index&&!locked[p.i]);
+    const oldRemaining=sum(peers.map(p=>p.x)),remaining=oldRemaining+row[index]-next;
+    peers.forEach(p=>p.exact=oldRemaining?remaining*p.x/oldRemaining:remaining/peers.length);
+    const result=row.slice();result[index]=next;
     peers.forEach(p=>result[p.i]=Math.floor(p.exact));
     peers.sort((a,b)=>(b.exact-Math.floor(b.exact))-(a.exact-Math.floor(a.exact))||a.i-b.i);
     let left=total-sum(result);
@@ -351,7 +388,7 @@ const Allocation=(()=>{
     const amounts=exact||project(mean,Array(n).fill(0),Array(n).fill(total),total);
     return {amounts,mean,feasible,lower,upper,shortage:Math.max(0,sum(lower)-total),surplus:Math.max(0,total-sum(upper)),within:amounts.map((x,i)=>x>=lower[i]&&x<=upper[i])};
   }
-  return Object.freeze({parseQuantity,bounds,validRow,equal,redistribute,project,settle});
+  return Object.freeze({parseQuantity,bounds,validRow,equal,adjustmentRange,equalUnlocked,redistribute,project,settle});
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=Allocation;
 
@@ -370,7 +407,7 @@ if(typeof module!=='undefined'&&module.exports)module.exports=Allocation;
   const presets={money:{label:'金钱',unit:'元',precision:2,totalText:'1000',symbol:'¥'},percent:{label:'百分比',unit:'%',precision:2,totalText:'100',symbol:'%'},custom:{label:'资源',unit:'份',precision:0,totalText:'100',symbol:'✳'}};
   const colors=['#6553da','#d34c73','#16816e','#af6100','#2867bc','#8d46aa','#397935','#b5433e','#047a8e','#6650a2','#8e6818','#396c8e'];
   const fills=['#b5a4ff','#ffabc6','#7ed9bb','#ffd581','#9ccfff','#dcb0f2','#b0dc86','#ffb3a1','#8fdfe7','#c5b3ef','#e5d184','#abcbdc'];
-  const paths={arrow:'<path d="M5 12h14m-5-5 5 5-5 5"/>',lock:'<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',eye:'<path d="m3 3 18 18M10 5a10 10 0 0 1 2 0c5 0 9 7 9 7l-2 3M6 6 3 12s4 7 9 7l4-1"/>',check:'<path d="m5 12 4 4L19 6"/>',box:'<path d="m3 7 9-4 9 4-9 4-9-4Zm0 0v10l9 4 9-4V7M12 11v10"/>',download:'<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',link:'<path d="m10 13 4-4M9 6l2-2a5 5 0 0 1 7 7l-2 2M15 18l-2 2a5 5 0 0 1-7-7l2-2"/>'};
+  const paths={arrow:'<path d="M5 12h14m-5-5 5 5-5 5"/>',lock:'<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',unlock:'<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 7.5-2M12 14v3"/>',eye:'<path d="m3 3 18 18M10 5a10 10 0 0 1 2 0c5 0 9 7 9 7l-2 3M6 6 3 12s4 7 9 7l4-1"/>',check:'<path d="m5 12 4 4L19 6"/>',box:'<path d="m3 7 9-4 9 4-9 4-9-4Zm0 0v10l9 4 9-4V7M12 11v10"/>',download:'<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',link:'<path d="m10 13 4-4M9 6l2-2a5 5 0 0 1 7 7l-2 2M15 18l-2 2a5 5 0 0 1-7-7l2-2"/>'};
   const icon=(name,size=20)=>'<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[name]||paths.box)+'</svg>';
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const mascot=(cls='mascot',blind=false)=>'<img class="'+cls+'" src="'+(blind?BLIND_ART:ART)+'" alt="'+(blind?'蒙眼的圆球歪歪':'圆球歪歪')+'" draggable="false">';
@@ -449,9 +486,10 @@ if(typeof module!=='undefined'&&module.exports)module.exports=Allocation;
     mount('<section class="handoff-card"><div class="round-hud"><span>'+esc(topic||config.label)+'</span><b class="eyebrow">'+ballots.length+' / '+seats.length+' 已封存</b></div><h1>'+(ready?'一起揭晓':'轮到'+esc(seats[ballots.length]))+'</h1><div class="handoff-art">'+boxArt('mascot',ready)+'</div>'+slots()+'<div class="next-turn"><button type="button" id="next" class="primary wide">'+(ready?'揭晓分配':'是我，开始分')+icon('arrow')+'</button></div>'+(!storageOK?'<p class="micro">本局暂未保存，请保持页面打开</p>':'')+'</section>');
     $('#next').onclick=()=>ready?reveal():beginTurn();announce(ready?'全员已封存，可以开盒':'轮到'+seats[ballots.length]);
   }
-  function beginTurn(){stopPoll();draft={name:cloud?seats[ownIndex()]:'',shares:Allocation.equal(total,seats.length),tolerance:20,step:'allocate',invalid:new Set()};allocationView()}
+  function beginTurn(){stopPoll();draft={name:cloud?seats[ownIndex()]:'',shares:Allocation.equal(total,seats.length),locked:Array(seats.length).fill(false),tolerance:20,step:'allocate',invalid:new Set()};allocationView()}
   function toolbar(editName=false){return '<div class="private-toolbar"><span class="turn-chip">'+(editName&&!cloud?'<input id="player-name" aria-label="你的名字" placeholder="'+esc(seats[ownIndex()])+'" maxlength="16" value="'+esc(draft.name)+'" autocomplete="off">':esc(seats[ownIndex()]))+'<b>'+String(ownIndex()+1)+' / '+seats.length+'</b></span><button type="button" id="cover" class="text-button">'+icon('eye',20)+' 遮住</button></div>'}
   const pushStep=()=>Math.max(1,Math.round(total/100));
+  const shareRange=i=>Allocation.adjustmentRange(total,draft.shares,i,draft.locked);
   function coinHeights(x){
     const count=x?Math.max(1,Math.ceil(x/total*60)):0,heights=[0,0,0],order=[1,0,2,1,0,2,1,0];
     for(let i=0;i<count;i++)heights[order[i%order.length]]++;
@@ -470,37 +508,58 @@ if(typeof module!=='undefined'&&module.exports)module.exports=Allocation;
   }
   function allocationView(){
     phase='private';draft.step='allocate';const own=ownIndex();
-    mount(`<section class="game-card coin-game">${toolbar(true)}<div class="play-heading"><h1>上下推金币</h1><button type="button" id="equalize" class="equalize">均分 ↺</button></div><form id="ballot" novalidate><div class="table-scene"><div class="table-total"><span>${esc(topic||config.label)}</span><b>${esc(quantity(total))}</b></div><div class="coin-table" data-count="${seats.length}" data-dense="${seats.length>4}">${seats.map((name,i)=>`<section class="coin-seat ${i===own?'own':''}" data-seat="${i}" style="--tint:${fills[i]};--ink:${colors[i]}"><div class="coin-person"><span class="seat-avatar">${i+1}</span><b>${esc(name)}</b>${i===own?'<em>我</em>':''}</div><div class="row-amount"><input id="amount-${i}" data-amount="${i}" inputmode="${config.precision?'decimal':'numeric'}" maxlength="12" value="${raw(draft.shares[i])}" aria-label="${esc(name)}分配数量，单位${esc(config.unit)}" aria-describedby="ballot-error"></div><div class="push-stage" data-push="${i}" role="slider" tabindex="0" aria-label="${esc(name)}的金币，向上增加，向下减少" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="${raw(total)}" aria-valuenow="${raw(draft.shares[i])}"><span class="push-track" aria-hidden="true"></span><span class="push-fill" aria-hidden="true"></span><span class="push-floor" aria-hidden="true"></span><span class="coin-pile" aria-hidden="true"></span><span class="push-thumb" aria-hidden="true">↕</span></div><div class="lane-controls"><button type="button" data-nudge="${i}" data-direction="-1" aria-label="减少${esc(name)}的份额">−</button><output id="percent-${i}">${pct(draft.shares[i])}%</output><button type="button" data-nudge="${i}" data-direction="1" aria-label="增加${esc(name)}的份额">＋</button></div></section>`).join('')}</div></div><p class="error" id="ballot-error" role="alert"></p><div class="action-dock"><button class="primary wide" id="step-next" type="submit">分好了，去封存 ${icon('arrow',24)}</button></div></form></section>`);
+    mount(`<section class="game-card coin-game">${toolbar(true)}<div class="play-heading"><h1>上下推金币</h1><button type="button" id="equalize" class="equalize">均分 ↺</button></div><form id="ballot" novalidate><div class="table-scene"><div class="table-total"><span>${esc(topic||config.label)}</span><b>${esc(quantity(total))}</b></div><div class="coin-table" data-count="${seats.length}" data-dense="${seats.length>4}">${seats.map((name,i)=>`<section class="coin-seat ${i===own?'own':''}" data-seat="${i}" style="--tint:${fills[i]};--ink:${colors[i]}"><div class="coin-person"><span class="seat-avatar">${i+1}</span><b>${esc(name)}</b>${i===own?'<em>我</em>':''}</div><div class="row-amount"><input id="amount-${i}" data-amount="${i}" inputmode="${config.precision?'decimal':'numeric'}" maxlength="12" value="${raw(draft.shares[i])}" aria-label="${esc(name)}分配数量，单位${esc(config.unit)}" aria-describedby="ballot-error"></div><div class="push-stage" data-push="${i}" role="slider" tabindex="0" aria-label="${esc(name)}的金币，向上增加，向下减少" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="${raw(total)}" aria-valuenow="${raw(draft.shares[i])}"><span class="push-track" aria-hidden="true"></span><span class="push-fill" aria-hidden="true"></span><span class="push-floor" aria-hidden="true"></span><span class="coin-pile" aria-hidden="true"></span><span class="push-thumb" aria-hidden="true">↕</span></div><div class="lane-controls"><button type="button" data-nudge="${i}" data-direction="-1" aria-label="减少${esc(name)}的份额">−</button><output id="percent-${i}">${pct(draft.shares[i])}%</output><button type="button" data-nudge="${i}" data-direction="1" aria-label="增加${esc(name)}的份额">＋</button></div><button type="button" class="share-lock" data-lock="${i}" aria-pressed="false" aria-label="锁定${esc(name)}的金额">${icon('unlock',16)}<span>锁定</span></button></section>`).join('')}</div><p class="allocation-hint" id="allocation-hint">调好一位，点锁定</p></div><p class="error" id="ballot-error" role="alert"></p><div class="action-dock"><button class="primary wide" id="step-next" type="submit">分好了，去封存 ${icon('arrow',24)}</button></div></form></section>`);
     $('#cover').onclick=cover;$('#player-name')?.addEventListener('input',e=>{draft.name=e.target.value;$('[data-seat="'+own+'"] .coin-person b').textContent=draft.name.trim()||seats[own]});
-    document.querySelectorAll('[data-amount]').forEach(input=>input.oninput=()=>{
-      const i=+input.dataset.amount,x=Allocation.parseQuantity(input.value,config.precision);
-      if(x===null||x>total){draft.invalid.add(i);input.setAttribute('aria-invalid','true');$('#ballot-error').textContent='每份填 0–'+quantity(total)+(config.precision?'，最多两位小数。':'，使用整数。');return}
-      draft.invalid.delete(i);draft.shares=Allocation.redistribute(total,draft.shares,i,x);syncShares(i);markPlayed();
-    });
-    $('#equalize').onclick=()=>{draft.shares=Allocation.equal(total,seats.length);draft.invalid.clear();syncShares();announce('已均分')};
     $('#ballot').onsubmit=e=>{e.preventDefault();if(draft.invalid.size){$('#ballot-error').textContent='先修改标出的数量。';$('#amount-'+[...draft.invalid][0]).focus();return}sealView()};bindPushers();syncShares();
   }
   function markPlayed(){document.querySelector('.coin-game')?.classList.add('has-played')}
   function syncShares(editing=-1){
+    const free=draft.locked.filter(x=>!x).length;
     draft.shares.forEach((x,i)=>{
-      const input=$('#amount-'+i),stage=$('[data-push="'+i+'"]'),pile=stage.querySelector('.coin-pile');
+      const input=$('#amount-'+i),stage=$('[data-push="'+i+'"]'),pile=stage.querySelector('.coin-pile'),button=$('[data-lock="'+i+'"]');
+      const locked=draft.locked[i],[min,max]=shareRange(i),fixed=min===max;
       if(i!==editing&&!draft.invalid.has(i))input.value=raw(x);
       input.setAttribute('aria-invalid',String(draft.invalid.has(i)));input.style.setProperty('--digits',Math.max(4,raw(x).length));
+      input.readOnly=fixed;input.title=locked?'解锁后修改':fixed?'解锁另一位即可调整':'点击输入准确数量';
+      stage.closest('.coin-seat').classList.toggle('is-locked',locked);
+      stage.setAttribute('aria-disabled',String(fixed));stage.tabIndex=fixed?-1:0;
+      stage.setAttribute('aria-valuemin',raw(min));stage.setAttribute('aria-valuemax',raw(max));
+      stage.setAttribute('aria-label',seats[i]+(locked?'的金额已锁定':fixed?'自动获得剩余数量':'的金币，向上增加，向下减少'));
+      stage.querySelector('.push-thumb').innerHTML=locked?icon('lock',16):fixed?'=':'↕';
+      button.setAttribute('aria-pressed',String(locked));button.setAttribute('aria-label',(locked?'解锁':'锁定')+seats[i]+'的金额');
+      button.innerHTML=icon(locked?'lock':'unlock',16)+'<span>'+(locked?'已锁定':'锁定')+'</span>';
+      document.querySelectorAll('[data-nudge="'+i+'"]').forEach(b=>b.disabled=fixed||(Number(b.dataset.direction)<0?x<=min:x>=max));
       $('#percent-'+i).textContent=pct(x)+'%';stage.style.setProperty('--share',x/total);
       syncCoinPile(pile,x);
       stage.setAttribute('aria-valuenow',raw(x));stage.setAttribute('aria-valuetext',quantity(x));stage.dataset.empty=String(x===0);
     });
+    $('#equalize').textContent=free===seats.length?'均分 ↺':'均分余量 ↺';$('#equalize').disabled=free<2;
+    $('#allocation-hint').textContent=free===0?'已全部锁定，可以封存':free===1?'最后一位自动补齐 · 解锁另一位可调整':free<seats.length?'已锁住的数量保持不变':'调好一位，点锁定';
     if(!draft.invalid.size)$('#ballot-error').textContent='';
   }
   function bindPushers(){
     let drag=null,frame=0;
     const render=()=>{cancelAnimationFrame(frame);frame=0;if(draft&&phase==='private')syncShares()};
     const finish=(cancel=false)=>{if(!drag)return;const d=drag;drag=null;if(cancel&&draft)draft.shares=d.base;render();d.stage.closest('.coin-seat').classList.remove('pushing');if(d.stage.hasPointerCapture(d.id))d.stage.releasePointerCapture(d.id);if(!cancel)announce(seats[d.i]+' '+quantity(draft.shares[d.i]))};
-    const update=(i,next)=>{if(draft.invalid.size){toast('先修改标出的数量');return}draft.shares=Allocation.redistribute(total,draft.shares,i,Math.max(0,Math.min(total,next)));syncShares();markPlayed()};
+    const validInput=()=>{if(!draft.invalid.size)return true;toast('先修改标出的数量');$('#amount-'+[...draft.invalid][0]).focus();return false};
+    const update=(i,next)=>{finish();if(!validInput())return;const [min,max]=shareRange(i);draft.shares=Allocation.redistribute(total,draft.shares,i,Math.max(min,Math.min(max,next)),draft.locked);syncShares();markPlayed()};
+    document.querySelectorAll('[data-amount]').forEach(input=>input.oninput=()=>{
+      const entered=input.value;finish();input.value=entered;
+      const i=+input.dataset.amount,[min,max]=shareRange(i),x=Allocation.parseQuantity(entered,config.precision);
+      if(min===max){syncShares();return}
+      if(x===null||x>max){draft.invalid.add(i);input.setAttribute('aria-invalid','true');$('#ballot-error').textContent='这位可分 0–'+quantity(max)+(config.precision?'，最多两位小数。':'，使用整数。');return}
+      draft.invalid.delete(i);draft.shares=Allocation.redistribute(total,draft.shares,i,x,draft.locked);syncShares(i);markPlayed();
+    });
+    document.querySelectorAll('[data-lock]').forEach(button=>button.onclick=()=>{
+      finish();if(!validInput())return;const i=+button.dataset.lock;draft.locked[i]=!draft.locked[i];syncShares();markPlayed();
+      if(!calmMotion())button.animate([{transform:'scale(.92)'},{transform:'scale(1.04)',offset:.65},{transform:'scale(1)'}],{duration:220,easing:'ease-out'});
+      announce(seats[i]+(draft.locked[i]?'已锁定 ':'已解锁 ')+quantity(draft.shares[i]));
+    });
+    $('#equalize').onclick=()=>{finish();draft.shares=Allocation.equalUnlocked(total,draft.shares,draft.locked);draft.invalid.clear();syncShares();announce(draft.locked.some(Boolean)?'未锁定的余量已均分':'已均分')};
     document.querySelectorAll('[data-push]').forEach(stage=>{
       const i=+stage.dataset.push;
-      stage.onpointerdown=e=>{if(e.button!==0||e.isPrimary===false||drag)return;if(draft.invalid.size){toast('先修改标出的数量');return}const travel=Math.max(80,stage.clientHeight-52);drag={id:e.pointerId,i,stage,y:e.clientY,start:draft.shares[i],base:draft.shares.slice(),travel};stage.setPointerCapture(e.pointerId);stage.closest('.coin-seat').classList.add('pushing');markPlayed();e.preventDefault()};
-      stage.onpointermove=e=>{if(!drag||e.pointerId!==drag.id||phase!=='private')return;const next=Math.max(0,Math.min(total,Math.round(drag.start+(drag.y-e.clientY)/drag.travel*total)));draft.shares=Allocation.redistribute(total,drag.base,i,next);if(!frame)frame=requestAnimationFrame(render)};
+      stage.onpointerdown=e=>{if(e.button!==0||e.isPrimary===false||drag)return;const [min,max]=shareRange(i);if(min===max||!validInput())return;const travel=Math.max(80,stage.clientHeight-52);drag={id:e.pointerId,i,stage,y:e.clientY,start:draft.shares[i],base:draft.shares.slice(),locked:draft.locked.slice(),max,travel};stage.setPointerCapture(e.pointerId);stage.closest('.coin-seat').classList.add('pushing');markPlayed();e.preventDefault()};
+      stage.onpointermove=e=>{if(!drag||e.pointerId!==drag.id||phase!=='private')return;const next=Math.max(0,Math.min(drag.max,Math.round(drag.start+(drag.y-e.clientY)/drag.travel*total)));draft.shares=Allocation.redistribute(total,drag.base,i,next,drag.locked);if(!frame)frame=requestAnimationFrame(render)};
       stage.onpointerup=e=>{if(drag?.id===e.pointerId)finish()};
       stage.onpointercancel=stage.onlostpointercapture=()=>finish(true);
       stage.onkeydown=e=>{const direction={ArrowUp:1,ArrowRight:1,ArrowDown:-1,ArrowLeft:-1,PageUp:10,PageDown:-10}[e.key];if(direction||e.key==='Home'||e.key==='End'){e.preventDefault();update(i,e.key==='Home'?0:e.key==='End'?total:draft.shares[i]+direction*pushStep());announce(seats[i]+' '+quantity(draft.shares[i]))}};

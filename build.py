@@ -26,5 +26,7 @@ for key, value in {
 (ROOT / "index.html").write_text(html, encoding="utf-8")
 local = html.replace("mode='cloud'", "mode='local'")
 (ROOT / "local.html").write_text(local, encoding="utf-8")
-(ROOT / "play-5.5.2.html").write_text(local, encoding="utf-8")
+# Preserve the shared 5.5.2 entry as a current-build alias for existing links.
+for entry in ("play-5.5.2.html", "play-5.6.0.html"):
+    (ROOT / entry).write_text(local, encoding="utf-8")
 print("Built index.html:", len(html.encode("utf-8")), "bytes")

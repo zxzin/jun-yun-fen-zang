@@ -18,3 +18,6 @@ public-api/
 !qa/isolated-browser.cjs
 !qa/scenarios.test.cjs
 !qa/controls-browser.test.cjs
+
+!qa/blob.test.cjs
+!qa/live-storage-probe.cjs

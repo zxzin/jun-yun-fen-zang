@@ -42,7 +42,7 @@ GitHub Pages 托管网页；Vercel Functions 和私有 Blob 保存云端房间�
 - `node qa/general-browser.test.cjs`：本地手机/桌面、触摸、键盘、隐私和恢复测试。
 - `node qa/cloud-browser.test.cjs`：三浏览器上下文连接真实服务逻辑的本地联测；设置 `LIVE_URL` 可验证正式环境。
 - 浏览器测试可用 `PLAYWRIGHT_MODULE` 和 `CHROME_PATH` 指定现有 Playwright/Chrome。
-- `api/rooms.js`：仅允许网页源 `https://zxzin.github.io`，服务端私有存储以 ETag 条件写保护并发更新。
+- `api/rooms.js`：仅允许网页源 `https://zxzin.github.io`，服务端私有存储读取原始未压缩表示，以强 ETag 条件写保护并发更新。
 - Vercel 项目 `junyun-rooms`，连接 Production 与 Preview 的私有 Blob，以 `BLOB_STORE_ID` 和 Vercel OIDC 授权。无客户端存储密钥；存储未连接时返回 503。
 - main 推送触发 GitHub Pages 构建/测试/发布与 Vercel 后端构建。公开页面目录仅含 HTML 与图标，不包含服务端配置或房间数据。
 - 当前限制每小时最多创建 30 个房间。存储套餐额度用尽或服务中断时页面保留草稿并提示重试。
@@ -59,4 +59,4 @@ YY 角色及本项目视觉资产的权利由原作者保留。
 
 固定种子构造 3–12 人各 1,000 组，共 10,000 组：6,648 组有可行解，全部落在个人填写范围并保持总量；3,352 组范围冲突，全部识别。构造样本用于验证算法，比例代表测试覆盖，不代表真实用户满意率。测试运行后生成 `qa/v7-allocation-results.md` 与 JSON 明细。
 
-当前 5.5.2 位于开发分支。正式共享房间仍等待 Production 私有存储连接与真实联测，GitHub Pages 主站尚未发布本版。
+5.5.2 已发布至 GitHub Pages。私有存储已连接，支持按房间邀请同伴；每人使用自己的专属邀请链接。

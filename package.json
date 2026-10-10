@@ -6,7 +6,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test qa/engine.test.cjs qa/cloud.test.cjs qa/scenarios.test.cjs",
+    "test": "node --test qa/engine.test.cjs qa/cloud.test.cjs qa/scenarios.test.cjs qa/blob.test.cjs",
     "build": "node server/build.cjs"
   },
   "dependencies": {

@@ -7,12 +7,12 @@
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f6fa">
 <meta name="application-version" content="5.5.2">
-<meta property="og:title" content="均匀分赃 · 歪歪的多人盲盒博弈">
+<meta property="og:title" content="FairShare · 均匀分赃">
 <meta property="og:description" content="分享邀请或本地分，每人提交自己的分配方案，全员封存后揭晓。">
 <meta property="og:image" content="https://zxzin.github.io/jun-yun-fen-zang/assets/yy-round-v6.png">
 <meta property="og:url" content="https://zxzin.github.io/jun-yun-fen-zang/">
 <meta name="description" content="金钱、百分比与自定义资源。拖动金币分配，邀请朋友独立填写，全员完成后揭晓综合建议。">
-<title>均匀分赃 · 5.5.2</title>
+<title>FairShare · 均匀分赃</title>
 <link rel="icon" id="favicon" type="image/webp">
 <link rel="apple-touch-icon" id="touch-icon">
 <style>
@@ -276,7 +276,7 @@ body{min-height:100dvh;background:#f4f6fa;color:var(--play-ink)}
 <div class="shell">
 <header class="topbar"><div class="brand"><img id="brand-avatar" class="brand-avatar" alt="" width="43" height="43">均匀分赃</div><div class="top-actions"><span class="local"></span><button type="button" id="rules-btn" class="text-button">怎么玩</button><button type="button" id="reset-btn" class="text-button" hidden>重开</button></div></header>
 <main id="app"></main>
-<footer class="footer"><span></span><span class="signature">ZINX 小玩意</span></footer>
+<footer class="footer"><span>FairShare · FS</span><span class="signature">ZINX 小玩意</span></footer>
 </div>
 <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
 <dialog id="rules"><h2>怎么玩</h2><ol><li>分享邀请：每人领取自己的位置。本地分：同一台手机轮流填写。</li><li>上下推每人的金币，向上多分，向下少分。其他人的份额会一起调整，＋/− 每次调整总量的约 1%。点击数字可精确修改，总量保持不变。</li><li>选自己接受的浮动，点“封存我的方案”，也可以拖卡片进盲盒。全员封好，一起揭晓。</li></ol><h3>最后怎么算？</h3><p>每人提交一份完整方案，每份权重相同。先把每位玩家收到的建议数平均，再在各自接受范围内，找与平均结果最接近的分配。</p><div class="algorithm-example"><p>例如总量 10,000，三份方案分别是：<br>A：5,000 / 3,000 / 2,000<br>B：4,000 / 4,000 / 2,000<br>C：4,000 / 3,000 / 3,000</p><p>平均：4,333.33 / 3,333.33 / 2,333.33。<br>三人都接受自身期望 ±20% 时，C 最少接受 2,400，最终调整为：<br><b>4,300 / 3,300 / 2,400。</b></p></div><details><summary>精度、冲突与算法边界</summary><p>具体目标是最小化最终分配与平均方案的平方偏差之和，同时满足总量与接受范围。金额及百分比精确到 0.01；整份资源使用整数。尾差按最小增量偏差补齐，同等时按玩家编号。</p><p>若大家的最低值加起来超过总量，或最高值加起来不够总量，系统会标明冲突，给出不受范围约束的平均参考。接受范围不会被偷偷放宽。</p><p>这是共同协商的建议。填写、收紧范围或串通会影响结果，系统无法验证真实贡献，也无法保证每个人都满意。</p></details><details><summary>保存与盲填</summary><p>每次封存后，本局存入这个浏览器的本地存储。刷新后在首页点“继续上次”；正在编辑、尚未封存的草稿不保存。清理浏览器数据或重开会移除本局。</p><p>交接和遮屏会移除当前填写界面。具备开发者工具访问能力的人仍能读取本机数据，适合彼此信任的参与者。全员完成后展示最终结果，原始方案保持隐藏。</p></details><button type="button" class="primary wide" id="close-rules">懂了，去玩</button></dialog>

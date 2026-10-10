@@ -1,8 +1,8 @@
-# 均匀分赃
+# FairShare · 均匀分赃
 
 [打开网页](https://zxzin.github.io/jun-yun-fen-zang/)
 
-金钱、百分比、自定义资源，2–12 人共同分配。
+英文名 **FairShare**，简称 **FS**。金钱、百分比、自定义资源，2–12 人共同分配。
 
 ## 两种方式
 
@@ -43,7 +43,7 @@ GitHub Pages 托管网页；Vercel Functions 和私有 Blob 保存云端房间�
 - `node qa/cloud-browser.test.cjs`：三浏览器上下文连接真实服务逻辑的本地联测；设置 `LIVE_URL` 可验证正式环境。
 - 浏览器测试可用 `PLAYWRIGHT_MODULE` 和 `CHROME_PATH` 指定现有 Playwright/Chrome。
 - `api/rooms.js`：仅允许网页源 `https://zxzin.github.io`，服务端私有存储以 ETag 条件写保护并发更新。
-- Vercel 项目 `junyun-rooms`，连接 Production 的私有 Blob，以 `BLOB_STORE_ID` 和 Vercel OIDC 授权。无客户端存储密钥；存储未连接时返回 503。
+- Vercel 项目 `junyun-rooms`，连接 Production 与 Preview 的私有 Blob，以 `BLOB_STORE_ID` 和 Vercel OIDC 授权。无客户端存储密钥；存储未连接时返回 503。
 - main 推送触发 GitHub Pages 构建/测试/发布与 Vercel 后端构建。公开页面目录仅含 HTML 与图标，不包含服务端配置或房间数据。
 - 当前限制每小时最多创建 30 个房间。存储套餐额度用尽或服务中断时页面保留草稿并提示重试。
 

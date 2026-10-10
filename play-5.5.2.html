@@ -7,12 +7,12 @@
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f6fa">
 <meta name="application-version" content="5.5.2">
-<meta property="og:title" content="FairShare · 均匀分赃">
+<meta property="og:title" content="FairShare · 好好分赃">
 <meta property="og:description" content="分享邀请或本地分，每人提交自己的分配方案，全员封存后揭晓。">
 <meta property="og:image" content="https://zxzin.github.io/jun-yun-fen-zang/assets/yy-round-v6.png">
 <meta property="og:url" content="https://zxzin.github.io/jun-yun-fen-zang/">
 <meta name="description" content="金钱、百分比与自定义资源。拖动金币分配，邀请朋友独立填写，全员完成后揭晓综合建议。">
-<title>FairShare · 均匀分赃</title>
+<title>FairShare · 好好分赃</title>
 <link rel="icon" id="favicon" type="image/webp">
 <link rel="apple-touch-icon" id="touch-icon">
 <style>
@@ -274,7 +274,7 @@ body{min-height:100dvh;background:#f4f6fa;color:var(--play-ink)}
 </svg>
 
 <div class="shell">
-<header class="topbar"><div class="brand"><img id="brand-avatar" class="brand-avatar" alt="" width="43" height="43">均匀分赃</div><div class="top-actions"><span class="local"></span><button type="button" id="rules-btn" class="text-button">怎么玩</button><button type="button" id="reset-btn" class="text-button" hidden>重开</button></div></header>
+<header class="topbar"><div class="brand"><img id="brand-avatar" class="brand-avatar" alt="" width="43" height="43">好好分赃</div><div class="top-actions"><span class="local"></span><button type="button" id="rules-btn" class="text-button">怎么玩</button><button type="button" id="reset-btn" class="text-button" hidden>重开</button></div></header>
 <main id="app"></main>
 <footer class="footer"><span>FairShare · FS</span><span class="signature">ZINX 小玩意</span></footer>
 </div>
@@ -562,8 +562,8 @@ if(typeof module!=='undefined'&&module.exports)module.exports=Allocation;
     document.querySelectorAll('[data-accept]').forEach(b=>b.onclick=async()=>{const i=+b.dataset.accept;if(cloud){try{applyCloud(await cloudRequest({action:'accept',room:cloud.id,accepted:!accepted[i]},cloud.credential),true)}catch(e){toast(e.message)}}else{accepted[i]=!accepted[i];persist();renderResult(true);document.querySelectorAll('[data-accept]')[i].focus({preventScroll:true})}});$('#save').onclick=saveResult;$('#algorithm').onclick=()=>$('#rules').showModal();$('#renegotiate')?.addEventListener('click',()=>{if(cloud){names=seats.slice();mode='local';home();return}pendingReset=()=>{seats=ballots.map((b,i)=>b.name||seats[i]);ballots=[];accepted=seats.map(()=>false);result=null;draft=null;persist();handoff()};$('#restart-copy').textContent='保留主题、总量和名字，重新填写所有人的方案。本机上一轮方案会被替换。';$('#restart').showModal()});
   }
   function saveResult(){
-    const text=['均匀分赃',config.label+'：'+quantity(total),'状态：'+(result.feasible?'各自范围内的综合建议':'接受范围冲突，需协商'),'现场认可：'+accepted.filter(Boolean).length+'/'+seats.length,'',...ballots.map((b,i)=>seats[i]+' · '+b.name+'：'+quantity(result.amounts[i])+'（'+(accepted[i]?'已认可':'待认可')+'）'),'','每人一份完整分配，等权平均，再按接受范围调整。'].join('\n');
-    const url=URL.createObjectURL(new Blob(['\uFEFF'+text],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='均匀分赃-分配结果.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('结果文件已生成');
+    const text=['好好分赃',config.label+'：'+quantity(total),'状态：'+(result.feasible?'各自范围内的综合建议':'接受范围冲突，需协商'),'现场认可：'+accepted.filter(Boolean).length+'/'+seats.length,'',...ballots.map((b,i)=>seats[i]+' · '+b.name+'：'+quantity(result.amounts[i])+'（'+(accepted[i]?'已认可':'待认可')+'）'),'','每人一份完整分配，等权平均，再按接受范围调整。'].join('\n');
+    const url=URL.createObjectURL(new Blob(['\uFEFF'+text],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='好好分赃-分配结果.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('结果文件已生成');
   }
   let pendingReset=null;
   function reset(){stopPoll();if(cloud){cloud=null;history.replaceState(null,'',location.pathname+location.search);home();return}clearTimeout(timer);sealing=false;timer=null;try{localStorage.removeItem(STORE)}catch{}saved=null;draft=null;ballots=[];result=null;seats=[];accepted=[];$('#reset-btn').disabled=false;config={kind:'money',count:3,...presets.money};home()}

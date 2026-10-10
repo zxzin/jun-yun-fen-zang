@@ -6,7 +6,7 @@ module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','no-referrer');
  const origin=req.headers.origin;
  const allowed=origin==='https://zxzin.github.io';
- if(origin&&!allowed)return res.status(403).json({error:'请从均匀分赃网页打开。'});
+ if(origin&&!allowed)return res.status(403).json({error:'请从好好分赃网页打开。'});
  if(allowed){res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');res.setHeader('Access-Control-Allow-Methods','POST, OPTIONS');}
  if(req.method==='OPTIONS')return res.status(204).end();
  if(req.method!=='POST')return res.status(405).json({error:'请从网页操作。'});

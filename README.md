@@ -1,4 +1,4 @@
-# FairShare · 均匀分赃
+# FairShare · 好好分赃
 
 [打开网页](https://zxzin.github.io/jun-yun-fen-zang/)
 

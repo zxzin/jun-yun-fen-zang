@@ -1,4 +1,4 @@
-name: Publish 均匀分赃
+name: Publish 好好分赃
 on:
   push:
     branches: [main]

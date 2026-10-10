@@ -17,3 +17,4 @@ public-api/
 !qa/cloud-browser.test.cjs
 !qa/isolated-browser.cjs
 !qa/scenarios.test.cjs
+!qa/controls-browser.test.cjs

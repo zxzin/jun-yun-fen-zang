@@ -4,4 +4,3 @@
 @keyframes open-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px) rotate(-1deg)}40%{transform:translateX(5px) rotate(1deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .opening .mascot{animation:open-shake .8s ease-in-out}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}.screen{animation:none}.hero-art .mascot{transform:none}}
-@media(prefers-reduced-transparency:reduce){.glass-lens{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}}

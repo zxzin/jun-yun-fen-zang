@@ -1,0 +1,117 @@
+/* One control material: clear lenses on colored wells, crisp ink above the light. */
+:root{
+ --control-ease:cubic-bezier(.2,1.35,.35,1);
+ --lens-fill:linear-gradient(135deg,#ffffffd9 0%,#ffffff48 44%,#ffffff94 100%);
+ --lens-edge:inset 0 1px 1px #fff,inset 1px 0 1px #ffffffb3,inset 0 -1px 1px #5374a72e;
+ --lens-shadow:0 3px 8px #2c467819;
+}
+.screen-still{animation:none}
+.primary,.secondary,.resume,.counter button,.back,.equalize,.accept,.lane-controls button,.precision-choices button,.private-toolbar .text-button{
+ position:relative;isolation:isolate;
+ transition:transform .24s var(--control-ease),box-shadow .2s,background-color .2s,opacity .18s;
+}
+.primary{
+ min-height:62px;padding:10px 20px;border-radius:21px;gap:14px;
+ color:#fff;background:linear-gradient(155deg,#ffffff26 0%,#ffffff00 54%,#142a791a 100%),#2e55e3;
+ border:1px solid #ffffff8c;
+ box-shadow:inset 0 1px 1px #ffffffa6,inset 0 -1px 1px #173eac66,0 3px 0 #2245ba,0 6px 12px #254ec323;
+ font-size:18px;font-weight:650;letter-spacing:.02em;
+}
+.primary>svg{
+ box-sizing:content-box;width:20px;height:20px;padding:8px;border-radius:50%;
+ background:linear-gradient(135deg,#ffffff47,#ffffff0d);
+ box-shadow:inset 0 1px 0 #ffffff94,inset 0 -1px 0 #1b3baa52;
+ transition:transform .24s var(--control-ease);
+}
+.primary.wide{justify-content:center;padding:10px 18px}
+.secondary,.resume,.back,.equalize,.accept,.private-toolbar .text-button{
+ color:#294b86;background:var(--lens-fill),#dfe9ff;border:1px solid #ffffffd1;
+ box-shadow:var(--lens-edge),var(--lens-shadow);
+ backdrop-filter:blur(8px) saturate(1.25);-webkit-backdrop-filter:blur(8px) saturate(1.25);
+}
+.secondary{min-height:54px;font-size:16px;font-weight:600}
+.resume{min-height:55px;font-size:14px;border-radius:18px;margin-top:18px}
+.resume>svg{width:18px;height:18px}
+.back{width:44px;height:44px;font-size:23px}
+.equalize,.private-toolbar .text-button{font-weight:500}
+.accept[aria-pressed=true]{background:var(--lens-fill),#c3eba9;color:#285d25}
+.precision-choices button{color:#435776;background:#edf2fb;border:1px solid transparent}
+.precision-choices button[aria-pressed=true]{color:#254bad;background:var(--lens-fill),#cbdbff;border-color:#fff;box-shadow:var(--lens-edge),var(--lens-shadow)}
+
+/* A translucent key moves over one continuous receiving surface. */
+.mode-tabs,.resource-tabs,.segment{
+ position:relative;isolation:isolate;padding:5px;gap:0;
+ background:#cbdcff;border-radius:20px;box-shadow:inset 0 1px 3px #506fac16;
+}
+.mode-tabs{display:flex}.resource-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#e0eaff;border-radius:24px}
+.mode-tabs button,.resource-tabs button,.segment button{
+ position:relative;z-index:2;background:transparent;color:#425b85;
+ border:0;box-shadow:none;font-weight:500;
+ transition:color .18s,transform .2s var(--control-ease);
+}
+.mode-tabs button{min-height:50px;font-size:15px;gap:7px}
+.resource-tabs button{min-height:84px;gap:8px;border-radius:19px;font-size:15px}
+.resource-tabs b{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;font-size:25px;color:#5472ae;transition:transform .24s var(--control-ease)}
+.resource-tabs button[aria-pressed=true] b{color:#214abb;transform:translateY(-1px) scale(1.08)}
+.resource-tabs button[aria-pressed=true]:after{right:8px;top:6px;font-size:10px;line-height:16px;width:16px;height:16px;border-radius:50%;background:#315be4;color:white}
+.mode-tabs button[aria-pressed=true],.resource-tabs button[aria-pressed=true],.segment button[aria-pressed=true]{background:transparent;color:#204ba9;box-shadow:none;font-weight:650}
+.control-lens,.glass-lens{
+ position:absolute;left:5px;top:5px;bottom:5px;z-index:1;pointer-events:none;
+ width:calc((100% - 10px)/2);border-radius:15px;
+ background:var(--lens-fill);border:1px solid #ffffffd9;
+ box-shadow:var(--lens-edge),0 4px 8px #3c5c9b24;
+ backdrop-filter:blur(8px) saturate(1.35);-webkit-backdrop-filter:blur(8px) saturate(1.35);
+}
+.resource-tabs .control-lens{width:calc((100% - 10px)/3);border-radius:19px}
+.segment{border-radius:17px;background:#b9cef8}
+.glass-lens{width:calc((100% - 10px)/4);border-radius:12px;transition:transform .32s cubic-bezier(.2,.85,.25,1)}
+.segment button{border-radius:12px;min-height:44px}
+
+/* The number and colored seats respond together; adding a player keeps the page in place. */
+.player-counter{min-height:74px;gap:14px;margin:22px 0}
+.party-label{min-width:0;flex:1}.party-label label{font-size:17px;font-weight:600}
+.party-dots{display:flex;flex-wrap:wrap;gap:4px;max-width:105px;min-height:9px;margin-top:9px}
+.party-dots i{width:9px;height:9px;border-radius:50%;background:var(--tint)}
+.counter{padding:5px;gap:3px;border-radius:23px;background:#e0eaff;box-shadow:inset 0 1px 3px #506fac12}
+.counter button{display:grid;place-items:center;width:46px;height:46px;border-radius:18px;font-size:28px;line-height:1;font-weight:500;color:#315bd5;background:var(--lens-fill);border:1px solid #ffffffdb;box-shadow:var(--lens-edge),var(--lens-shadow);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.counter output{font-size:30px;min-width:43px;line-height:1.25;font-weight:750;color:#264278}
+.counter button:disabled{opacity:.38;box-shadow:none}
+.lane-controls button{color:var(--ink);background:var(--lens-fill);border:1px solid #ffffffdc;box-shadow:var(--lens-edge),0 2px 5px #2c467815;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.push-thumb{background:var(--lens-fill);border:1px solid #fff;box-shadow:var(--lens-edge),var(--lens-shadow);backdrop-filter:blur(6px) saturate(1.4);-webkit-backdrop-filter:blur(6px) saturate(1.4);color:var(--ink);transition:transform .2s var(--control-ease),background-color .18s}
+.pushing .push-thumb{background:var(--lens-fill),#ffdf77;transform:scale(1.08)}
+
+/* Feedback stays local to the key being pressed. */
+@media(hover:hover){
+ .primary:not(:disabled):hover{background-color:#264dd4;transform:translateY(-1px)}
+ .primary:not(:disabled):hover>svg{transform:translateX(2px)}
+ .secondary:not(:disabled):hover,.resume:hover,.counter button:not(:disabled):hover,.back:hover,.equalize:hover,.accept:hover,.lane-controls button:not(:disabled):hover{transform:translateY(-1px);box-shadow:var(--lens-edge),0 4px 10px #2c46782b}
+}
+.primary:not(:disabled):active{transform:translateY(3px) scale(.99);box-shadow:inset 0 1px 3px #173d8840,0 1px 0 #2245ba}
+.primary:not(:disabled):active>svg{transform:translateX(3px) scale(.94)}
+.secondary:not(:disabled):active,.resume:active,.counter button:not(:disabled):active,.back:active,.equalize:active,.accept:active,.lane-controls button:not(:disabled):active,.precision-choices button:active,.private-toolbar .text-button:active{transform:translateY(2px) scale(.95);box-shadow:inset 0 1px 3px #344e8b26}
+.mode-tabs button:active,.resource-tabs button:active,.segment button:active{transform:scale(.96)}
+.primary:disabled{opacity:.55;box-shadow:inset 0 1px 1px #ffffffa6,0 1px 0 #2245ba}
+.action-dock .primary{min-height:62px;font-size:19px;border-radius:21px}
+.conflict .primary{background:linear-gradient(155deg,#ffffff24,#ffffff00),#86500b;color:#fff;box-shadow:inset 0 1px 1px #ffffff80,0 3px 0 #653d08}
+.invite-person .secondary{color:#294b86;min-height:44px}
+@media(max-width:700px){
+ .primary,.setup-card .primary,.action-dock .primary,.seal-bottom .primary{min-height:60px;font-size:18px}
+ .resource-tabs button{min-height:80px;font-size:14px}.mode-tabs button{font-size:15px;min-height:50px}
+ .resource-tabs b{font-size:25px}.player-counter{margin:20px 0}
+}
+@media(max-width:359px){
+ .counter button{width:44px;height:44px;border-radius:16px}.counter output{min-width:35px;font-size:28px}
+ .mode-tabs button{font-size:14px;gap:4px}.mode-tabs button svg{width:17px;height:17px}
+ .party-dots{max-width:75px}.resource-tabs button{font-size:13px}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+ .control-lens,.glass-lens,.counter button,.push-thumb,.lane-controls button{background:#f2f7ff}
+}
+@media(prefers-reduced-transparency:reduce){
+ .control-lens,.glass-lens,.counter button,.push-thumb,.lane-controls button{background:#f2f7ff;backdrop-filter:none;-webkit-backdrop-filter:none}
+ .secondary,.resume,.back,.equalize,.accept,.private-toolbar .text-button{background:#e4edff;backdrop-filter:none;-webkit-backdrop-filter:none}
+ .accept[aria-pressed=true]{background:#cde9b9}
+}
+@media(prefers-reduced-motion:reduce){
+ .primary:active,.secondary:active,.counter button:active,.lane-controls button:active,.mode-tabs button:active,.resource-tabs button:active{transform:none}
+}

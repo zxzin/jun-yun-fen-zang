@@ -1,0 +1,12 @@
+{
+  "method": "builtin_imagegen",
+  "use_case": "precise-object-edit",
+  "appearance_profile": "yy-rounded-pencil-20261009",
+  "reference_input_status": "actual_image_inputs",
+  "references": [
+    "/Users/zin/游戏开发/想法合集/均匀分赃/assets/yy-mouse-coin-v11.png",
+    "/Users/zin/.codex/skills/yypromo/assets/approved-rounded-pencil-20261009/02-round-body.png"
+  ],
+  "prompt": "Use case: precise-object-edit. Image 1 is the edit target: a single gold mouse-shaped game coin. Image 2 is a facial reference only. Remove the indigo blindfold from the coin, including its side knot and loose ends. Restore YY's two large clean white oval eyes with dark round pupils, using the eye spacing and proportions of image 2, and keep the tiny pale nose. Match the coin's face perspective. Preserve the target's gold round face, two round ears, gold raised rim, slim lower edge, fine colored-pencil texture, lighting, camera angle, size, and transparent background. Keep this as one gold coin portrait with no hands, no limbs, no mouth, no text, and no extra objects. Make only the requested facial accessory removal and revealed eyes; keep all other design details close to image 1.",
+  "adaptation": "Remove blindfold and reveal large YY eyes. Keep the gold coin, ears, rim, texture and stack geometry. Crop transparent padding and compress for inline WebP."
+}

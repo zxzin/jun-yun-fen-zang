@@ -37,7 +37,7 @@ GitHub Pages 托管网页；Vercel Functions 和私有 Blob 保存云端房间�
 
 ## 开发与部署
 
-- `python3 build.py`：生成 `index.html`、默认本地模式的 `local.html` 和版本入口 `play-5.5.html`，图片、样式和前端代码内嵌。
+- `python3 build.py`：生成 `index.html`、默认本地模式的 `local.html` 和版本入口 `play-5.5.1.html`，图片、样式和前端代码内嵌。
 - `npm ci --ignore-scripts && npm test`：算法、10,000 组多人范围场景、边界、服务端权限、并发领取/提交测试。
 - `node qa/general-browser.test.cjs`：本地手机/桌面、触摸、键盘、隐私和恢复测试。
 - `node qa/cloud-browser.test.cjs`：三浏览器上下文连接真实服务逻辑的本地联测；设置 `LIVE_URL` 可验证正式环境。
@@ -51,12 +51,12 @@ YY 角色及本项目视觉资产的权利由原作者保留。
 
 ## 角色与场景
 
-5.5 沿用「圆团大眼·细腻彩铅」YY 母版。睁眼与蒙眼两张透明原图位于 `assets/yy-round-v6.png`、`assets/yy-blind-v6.png`，内嵌页面使用对应 WebP。生成使用内置 ImageGen，完整提示词见 `assets/yy-v6-prompts.json`。
+5.5.1 沿用「圆团大眼·细腻彩铅」YY 母版。睁眼与蒙眼两张透明原图位于 `assets/yy-round-v6.png`、`assets/yy-blind-v6.png`，内嵌页面使用对应 WebP。生成使用内置 ImageGen，完整提示词见 `assets/yy-v6-prompts.json`。
 
-金币以圆耳、靛蓝眼罩和金色浮雕组成鼠鼠币面，每堆顶部显示完整头像，下方露出金色币边。三堆前后错落表现相对份额，具体数量以每栏顶部数字为准。原图 `assets/yy-mouse-coin-v11.png` 由内置 ImageGen 使用 YY 母版和游戏蒙眼形象作为实际输入生成，提示词见 `assets/yy-mouse-coin-v11-prompts.json`；页面内嵌压缩 WebP。触摸推拉时金币逐层增减，操纵钮与整栏高亮；首页、交接、分配、封存、邀请和结果页使用同一套浅蓝场景、白色操作卡、彩色玩家标记和蓝色主按钮。封存采用抱盒子的 YY，手与道具保持接触；两张开合状态原图位于 `assets/yy-box-open-v8.png`、`assets/yy-box-closed-v8.png`，提示词见 `assets/yy-v8-prompts.json`。
+金币以圆耳、大眼睛和金色浮雕组成鼠鼠币面，每堆顶部显示完整头像，下方露出金色币边。三堆前后错落表现相对份额，具体数量以每栏顶部数字为准。原图 `assets/yy-mouse-coin-v12.png` 由内置 ImageGen 使用原鼠鼠金币与 YY 大眼母版作为实际输入编辑，提示词见 `assets/yy-mouse-coin-v12-prompts.json`；页面内嵌压缩 WebP。触摸推拉时金币逐层增减，操纵钮与整栏高亮；首页、交接、分配、封存、邀请和结果页使用同一套浅蓝场景、白色操作卡、彩色玩家标记和蓝色主按钮。封存采用抱盒子的 YY，手与道具保持接触；两张开合状态原图位于 `assets/yy-box-open-v8.png`、`assets/yy-box-closed-v8.png`，提示词见 `assets/yy-v8-prompts.json`。
 
 ## 分配验证
 
 固定种子构造 3–12 人各 1,000 组，共 10,000 组：6,648 组有可行解，全部落在个人填写范围并保持总量；3,352 组范围冲突，全部识别。构造样本用于验证算法，比例代表测试覆盖，不代表真实用户满意率。测试运行后生成 `qa/v7-allocation-results.md` 与 JSON 明细。
 
-当前 5.5 位于开发分支。正式共享房间仍等待 Production 私有存储连接与真实联测，GitHub Pages 主站尚未发布本版。
+当前 5.5.1 位于开发分支。正式共享房间仍等待 Production 私有存储连接与真实联测，GitHub Pages 主站尚未发布本版。
